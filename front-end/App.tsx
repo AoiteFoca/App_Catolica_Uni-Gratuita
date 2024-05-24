@@ -19,7 +19,7 @@ export default function App() {
             Cadastre-se ou faça login para continuar
           </Text>
         </View>
-        {/* Botões */}
+        {/* Botões  */}
         <View className="mt-[60px] space-y-4 w-[70%] ">
           <TouchableOpacity className="rounded-full flex-row justify-between items-center bg-red-800 px-4 py-2 ">
             <Text className="w-full text-center text-white text-lg">
