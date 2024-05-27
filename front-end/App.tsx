@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { TailwindProvider } from "tailwindcss-react-native";
 import LandingPage from "./pages/landing";
+import LoaderPage from "./pages/loaderPage";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 
@@ -12,7 +13,7 @@ const App: React.FC = () => {
   return (
     <TailwindProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Loader">
           <Stack.Screen
             name="Home"
             component={LandingPage}
@@ -26,6 +27,11 @@ const App: React.FC = () => {
           <Stack.Screen
             name="Register"
             component={RegisterPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Loader"
+            component={LoaderPage}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
