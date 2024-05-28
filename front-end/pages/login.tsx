@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 const LoginPage = () => {
   return (
     <View className="flex-1 justify-center items-center">
-      <Text className="text-lg">Vitor Aqui</Text>
+      <Text className="text-lg">Vitor Aqui start</Text>
     </View>
   );
 };
