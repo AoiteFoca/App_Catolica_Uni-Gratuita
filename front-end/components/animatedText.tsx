@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { Animated, Easing, StyleSheet, View } from "react-native";
+import { Animated, Easing, View } from "react-native";
+import { styled } from "tailwindcss-react-native";
 
 type RootStackParamList = {
   Landing: undefined;
@@ -12,22 +13,30 @@ type RootStackParamList = {
 
 interface AnimatedTextProps {
   text?: string;
-  page?: string;
+  page?: keyof RootStackParamList; // Ensure 'page' matches one of the keys in the navigation stack
 }
 
 type NavigationProp = StackNavigationProp<RootStackParamList, "Loader">;
 
+const Container = styled(View);
+const TextContainer = styled(View);
+const AnimatedTextComponent = styled(Animated.Text);
+
 const AnimatedText: React.FC<AnimatedTextProps> = ({
   text = "UNIVERSIDADE GRATUITA",
-  page = "Home",
-}: any) => {
+  page = "Landing",
+}) => {
   const [letters, setLetters] = useState<string[]>([]);
   const animatedValues = text.split("").map(() => new Animated.Value(0));
+  const [hasNavigated, setHasNavigated] = useState(false);
 
   const navigation = useNavigation<NavigationProp>();
 
-  const handleLogin = () => {
-    navigation.navigate(page);
+  const handleNavigation = () => {
+    if (!hasNavigated) {
+      setHasNavigated(true);
+      navigation.replace(page); // Use replace instead of navigate
+    }
   };
 
   useEffect(() => {
@@ -35,7 +44,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
   }, [text]);
 
   useEffect(() => {
-    const animations = animatedValues.map((animatedValue: any, index: any) => {
+    const animations = animatedValues.map((animatedValue, index) => {
       return Animated.timing(animatedValue, {
         toValue: 1,
         duration: 100,
@@ -47,57 +56,35 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
 
     Animated.stagger(100, animations).start(() => {
       // Navega para outra página após a conclusão da animação
-      handleLogin();
-      // setLetters(text.split(""));
+      handleNavigation();
     });
   }, [text, animatedValues]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.textContainer}>
+    <Container className="flex-1 justify-center items-center">
+      <TextContainer className="flex-row flex-wrap justify-center items-center">
         {letters.map((letter, index) => (
-          <Animated.Text
+          <AnimatedTextComponent
             key={index}
-            style={[
-              styles.text,
-              {
-                opacity: animatedValues[index],
-                transform: [
-                  {
-                    translateY: animatedValues[index].interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [20, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}
+            className="text-2xl font-bold text-white"
+            style={{
+              opacity: animatedValues[index],
+              transform: [
+                {
+                  translateY: animatedValues[index].interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [20, 0],
+                  }),
+                },
+              ],
+            }}
           >
             {letter}
-          </Animated.Text>
+          </AnimatedTextComponent>
         ))}
-      </View>
-    </View>
+      </TextContainer>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  textContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-});
 
 export default AnimatedText;
