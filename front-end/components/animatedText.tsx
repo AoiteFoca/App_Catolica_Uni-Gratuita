@@ -47,14 +47,14 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
     const animations = animatedValues.map((animatedValue, index) => {
       return Animated.timing(animatedValue, {
         toValue: 1,
-        duration: 100,
+        duration: 75,
         delay: index * 100,
         useNativeDriver: true,
         easing: Easing.linear,
       });
     });
 
-    Animated.stagger(100, animations).start(() => {
+    Animated.stagger(70, animations).start(() => {
       // Navega para outra página após a conclusão da animação
       handleNavigation();
     });

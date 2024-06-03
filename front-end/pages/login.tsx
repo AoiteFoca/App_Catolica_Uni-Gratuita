@@ -8,10 +8,18 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import Layout from "../components/layout";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "./types/navigationTypes";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleAfterLogin = () => {
+    navigation.navigate("AfterLoginView");
+  };
 
   return (
     <Layout currentTab="Login">
@@ -46,7 +54,10 @@ const LoginPage = () => {
           </View>
           {/* Botões  */}
           <View className=" pt-20 items-center">
-            <TouchableOpacity className="rounded-full flex-row justify-around items-center bg-red-800 px-4 py-4 w-48">
+            <TouchableOpacity
+              className="rounded-full flex-row justify-around items-center bg-red-800 px-4 py-4 w-48"
+              onPress={handleAfterLogin}
+            >
               <Text className="text-white text-xl font-bold">ENTRAR</Text>
               <Text className="text-white right-2">
                 <Icon name="arrow-right-long" size={25} />
