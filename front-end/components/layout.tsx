@@ -5,13 +5,14 @@ import AppBottomBar from "./appBar";
 
 interface LayoutProps {
   children: React.ReactNode;
+  currentTab: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, currentTab }) => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>{children}</View>
-      <AppBottomBar />
+      <AppBottomBar currentTab={currentTab} />
     </View>
   );
 };
@@ -19,6 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,

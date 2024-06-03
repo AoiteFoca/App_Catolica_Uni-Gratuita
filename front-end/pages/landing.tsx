@@ -23,7 +23,7 @@ export default function LandingPage() {
     navigation.navigate("Register");
   };
   return (
-    <Layout>
+    <Layout currentTab="Home">
       <View className="flex-1 bg-white">
         <View className="flex-[2] bg-red-800 justify-center items-center">
           {/* Quadrados Brancos  */}

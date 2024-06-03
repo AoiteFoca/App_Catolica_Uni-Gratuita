@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Button,
+  View,
 } from "react-native";
-import Layout from "../components/layout";
 import Icon from "react-native-vector-icons/FontAwesome6";
+import Layout from "../components/layout";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
-    <Layout>
+    <Layout currentTab="Login">
       <View className="flex-1 bg-white">
         <View className="flex-[5] mt-[125px] items-center bg-white">
           <Text className="text-2xl text-red-900 font-bold">LOGIN</Text>
@@ -27,7 +26,10 @@ const LoginPage = () => {
             <View className="w-full pt-10 px-10">
               <Text className="text-lg text-red-900">CPF:</Text>
               {/*TextInput para cpf */}
-              <TextInput style={styles.input} />
+              <TextInput
+                className="h-[40px] mt-[10px] px-[10px] bg-[#D9D9D9] border-[1px] border-[#676767]"
+                // style={styles.input}
+              />
             </View>
 
             <View className="w-full pt-5 px-10">
