@@ -32,7 +32,6 @@ const RegisterPage = () => {
   });
 
   const handleRegister = (values: any) => {
-    // Função de registro
     console.log("teste", values);
   };
 
