@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
+import teste from "../../back-end/src/user/func";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -43,7 +44,7 @@ const LoginPage = () => {
           {/* Botões  */}
           <View className=" pt-20 items-center">
             <TouchableOpacity className="rounded-full flex-row justify-around items-center bg-red-800 px-4 py-4 w-48">
-              <Text className="text-white text-xl font-bold">ENTRAR</Text>
+              <Text className="text-white text-xl font-bold" onPress={teste}>ENTRAR</Text>
               <Text className="text-white right-2">
                 <Icon name="arrow-right-long" size={25} />
               </Text>
