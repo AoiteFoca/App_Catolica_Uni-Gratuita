@@ -14,26 +14,217 @@ datasource db {
 }
 
 model TipoUsuario {
-  id       Int      @id @default(autoincrement()) @map("ID")
-  userType String   @map("UserType") @db.VarChar(15)
+  id       Int      @id @default(autoincrement()) @db.TinyInt
+  userType String   @db.VarChar(15) @map("tipoUsuario")
   usuarios Usuario[]
-
-  @@map("TipoUsuario")
 }
 
 model Usuario {
-  id         Int        @id @default(autoincrement()) @map("ID")
-  login      String     @map("Login") @db.VarChar(25)
-  password   String     @map("Password") @db.VarChar(25)
-  userTypeId Int        @map("UserTypeID")
-  personId   Int?       @map("PersonID")
+  id         Int        @id @default(autoincrement())
+  login      String     @db.VarChar(25) @map("Login")
+  password   String     @db.VarChar(25) @map("Senha")
+  userTypeId Int        @db.TinyInt @map("tipoUsuarioId")
+  personId   Int?       @map("PessoaId")
 
   tipoUsuario TipoUsuario @relation(fields: [userTypeId], references: [id])
+  pessoa      Pessoa?     @relation(fields: [personId], references: [id])
+}
 
-  @@map("Usuario")
+model EstadoCivil {
+  id          Int    @id @default(autoincrement()) @db.TinyInt
+  estadoCivil String @db.VarChar(15)
+}
+
+model CorRaca {
+  id      Int    @id @default(autoincrement()) @db.TinyInt
+  corRaca String @db.VarChar(15)
+}
+
+model Sexo {
+  id   Int    @id @default(autoincrement()) @db.TinyInt
+  sexo String @db.VarChar(15)
+}
+
+model Estado {
+  id         Int    @id @default(autoincrement()) @db.TinyInt
+  uf         String @db.VarChar(2) @unique
+  nomeEstado String @db.VarChar(20)
+
+  cidades    Cidade
+}
+
+model Cidade {
+  id         Int    @id @default(autoincrement()) @db.SmallInt
+  nomeCidade String @db.VarChar(50)
+  estadoId   Int    @db.TinyInt
+
+  endereco   Endereco
+  estado     Estado @relation(fields: [estadoId], references: [id])
+}
+
+model Endereco {
+  id          Int     @id @default(autoincrement())
+  endereco    String  @db.VarChar(150)
+  bairro      String  @db.VarChar(50)
+  cep         Int     @map("CEP")
+  cidadeId    Int
+  numero      String  @db.VarChar(4)
+  complemento String? @db.VarChar(50)
+  
+  cidade      Cidade @relation(fields: [cidadeId], references: [id])
+}
+
+model RelacaoPessoaEndereco{
+  pessoaId   Int
+  enderecoId Int
+  
+  pessoa     Pessoa   @relation(fields: [pessoaId], references: [id])
+  enderecos  Endereco @relation(fields: [enderecoId], references: [id])
+}
+
+model GrauParentesco {
+  id   Int    @id @default(autoincrement()) @db.TinyInt
+  grau String db.VarChar(20)
+  grupoFamiliares GrupoFamiliar[]
+}
+
+model GrupoFamiliar {
+  id                    Int            @id @default(autoincrement())
+  cpf                   String         @unique @db.VarChar(11)
+  nome                  String         @db.VarChar(100)
+  idade                 Int            @db.TinyInt
+  grauParentescoId      Int            @map("GrauParentescoID")
+  formacao              String         @db.VarChar(50) 
+  ocupacao              String         @db.VarChar(50) 
+  grauParentesco        GrauParentesco @relation(fields: [grauParentescoId], references: [id])
+  relacaoPessoaFamilias RelacaoPessoaFamilia[]
+}
+
+model RelacaoPessoaFamilia{
+  pessoaId        Int?
+  grupoFamiliarId Int?
+  
+  pessoa          Pessoa?        @relation(fields: [pessoaId], references: [id])
+  grupoFamiliar   GrupoFamiliar? @relation(fields: [grupoFamiliarId], references: [id])
+}
+
+model Modalidade {
+  id         Int    @id
+  modalidade String @db.VarChar(50)
+  cursos     Curso[]
+}
+
+model Curso {
+  id           Int    @id
+  nomeCurso    String @db.VarChar(100)
+  numeroFases  Int
+  modalidadeId Int    @db.TinyInt
+
+  graduacao    Graduacao
+  modalidade   Modalidade @relation(fields: [modalidadeId], references: [id])
+}
+
+model Graduacao {
+  matriculaIES            Int    @unique
+  instituicao             String @db.VarChar(100)
+  dataIngressoInstituicao DateTime
+  cursoId                 Int    @db.TinyInt
+  fase                    Int    @db.TinyInt
+  anoSemestre             Int
+
+  cursos                  Curso  @relation(fields: [cursoId], references: [id])
+  pessoa                  Pessoa
+}
+
+model Telefone {
+  id                Int     @id @default(autoincrement())
+  telefone          String? @db.VarChar(12)
+  telefoneComercial String? @db.VarChar(12)
+  celular           String  @db.VarChar(12)
+  
+}
+
+model RelacaoPessoaTelefone {
+  pessoaId   Int
+  telefoneId Int
+  
+  pessoa     Pessoa   @relation(fields: [pessoaId], references: [id])
+  telefone   Telefone @relation(fields: [telefoneId], references: [id])
+}
+
+model Deficiencia {
+  id              Int    @id @default(autoincrement()) @db.TinyInt
+  doencaInvalidez String @db.VarChar(100)
+}
+
+model RelacaoPessoaDeficiencia {
+  pessoaId      Int
+  deficienciaId Int
+  
+  pessoa        Pessoa      @relation(fields: [pessoaId], references: [id])
+  deficiencias  Deficiencia @relation(fields: [deficienciaId], references: [id])
+}
+
+model Despesas {
+  id                  Int     @id @default(autoincrement())
+  despMensalHabitacao Decimal  @db.Decimal(10,2)
+  despFamTransporte   Decimal? @db.Decimal(10,2)
+  despFamDoenca       Decimal? @db.Decimal(10,2)
+  despFarEstudo       Decimal? @db.Decimal(10,2)
+
+  pessoa              Pessoa
+}
+
+model Moradia {
+  id     Int    @id
+  tipo   String @db.VarChar(12)
+
+  pessoa Pessoa
+}
+
+model Documentos {
+  id                Int    @id @default(autoincrement())
+  pessoaId          Int
+
+  pessoa            Pessoa @relation(fields: [pessoaId], references: [id])
 }
 
 model Pessoa {
-
+  id                     Int                         @id @default(autoincrement())
+  cpf                    String                      @db.VarChar(11) @unique
+  rg                     String                      @db.VarChar(15) @unique
+  nome                   String                      @db.VarChar(25)
+  sobrenome              String                      @db.VarChar(75)
+  nomeMae                String                      @db.VarChar(100)
+  nomePai                String                      @db.VarChar(100)
+  dataNascimento         DateTime 
+  naturalidade           String                      @db.VarChar(50)
+  email                  String                      @db.VarChar(50)
+  estadoCivilId          Int                         @db.TinyInt
+  corRacaId              Int                         @db.TinyInt
+  sexoId                 Int                         @db.TinyInt
+  ensinoMedio            Boolean
+  possuiGraduacao        Boolean
+  assistPublica          Boolean
+  resideSC               Int
+  rendaFamiliarBruta     Decimal                     @db.Decimal(10,2)
+  rendaPerCapita         Decimal                     @db.Decimal(10,2)
+  bensFamilia            Decimal                     @db.Decimal(10,2)
+  despesasId             Int
+  situacaoDesemprego     Boolean
+  graduacaoId            Int
+  tipoMoradiaId          Int                         @db.TinyInt
   
+  enderecos              RelacaoPessoaEndereco[]
+  telefones              RelacaoPessoaTelefone[]
+  estadoCivil            EstadoCivil                 @relation(fields: [estadoCivilId], references: [id])
+  corRaca                corRaca                     @relation(fields: [corRacaId], references: [id])
+  sexo                   Sexo                        @relation(fields: [sexoId], references: [id])
+  grupoFamilia           RelacaoPessoaFamilia[]?
+  despesa                Despesas                    @relation(fields: [despesasId], references: [id])
+  deficiencia            RelacaoPessoaDeficiencia[]?
+  graduacao              Graduacao                   @relation(fields: [graduacaoId], references: [id])
+  tipoMoradia            Moradia                     @relation(fields: [tipoMoradiaId], references: [id])
+  documentos             Documentos
+  usuario                Usuarios?
 }
