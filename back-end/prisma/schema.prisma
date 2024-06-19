@@ -183,10 +183,25 @@ model Moradia {
 }
 
 model Documentos {
-  id                Int    @id @default(autoincrement())
-  pessoaId          Int
+  id                  Int    @id @default(autoincrement())
+  pessoaId            Int
+  inscricao           String  @db.VarChar(200)
+  numPesGrupoFamiliar String  @db.VarChar(200) 
+  situacaoCivil       String  @db.VarChar(200)
+  rendaFamiliar       String  @db.VarChar(200)
+  impostoDeRenda      String  @db.VarChar(200)
+  bensFamiliares      String  @db.VarChar(200)
+  tipoMoradia         String  @db.VarChar(200)
+  despesasMoradia     String  @db.VarChar(200)
+  residenciaSC        String  @db.VarChar(200)
+  ensinoMedio         String  @db.VarChar(200)
+  despesaTransporte   String? @db.VarChar(200)
+  despesaDoenca       String? @db.VarChar(200)
+  deficiencia         String? @db.VarChar(200)
+  despesaEducacao     String? @db.VarChar(200)
+  adesaoUniGratuita   String  @db.VarChar(200)
 
-  pessoa            Pessoa @relation(fields: [pessoaId], references: [id])
+  pessoa              Pessoa @relation(fields: [pessoaId], references: [id])
 }
 
 model Pessoa {
