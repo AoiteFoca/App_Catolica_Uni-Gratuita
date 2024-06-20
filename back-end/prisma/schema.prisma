@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,64 +8,72 @@ datasource db {
 }
 
 model TipoUsuario {
-  id       Int      @id @default(autoincrement()) @db.TinyInt
-  userType String   @db.VarChar(15) @map("tipoUsuario")
+  id       Int    @id @default(autoincrement()) 
+  userType String  @map("tipoUsuario")
+  
   usuarios Usuario[]
 }
 
 model Usuario {
-  id         Int        @id @default(autoincrement())
-  login      String     @db.VarChar(25) @map("Login")
-  password   String     @db.VarChar(25) @map("Senha")
-  userTypeId Int        @db.TinyInt @map("tipoUsuarioId")
-  personId   Int?       @map("PessoaId")
+  id         Int    @id @default(autoincrement())
+  login      String @map("Login")
+  password   String @map("Senha")
+  userTypeId Int    @map("tipoUsuarioId")
+  personId   Int?   @unique @map("PessoaId")
 
   tipoUsuario TipoUsuario @relation(fields: [userTypeId], references: [id])
   pessoa      Pessoa?     @relation(fields: [personId], references: [id])
 }
 
 model EstadoCivil {
-  id          Int    @id @default(autoincrement()) @db.TinyInt
-  estadoCivil String @db.VarChar(15)
+  id          Int    @id @default(autoincrement()) 
+  estadoCivil String 
+
+  pessoa Pessoa[]
 }
 
 model CorRaca {
-  id      Int    @id @default(autoincrement()) @db.TinyInt
-  corRaca String @db.VarChar(15)
+  id      Int    @id @default(autoincrement()) 
+  corRaca String 
+
+  pessoa Pessoa[]
 }
 
 model Sexo {
-  id   Int    @id @default(autoincrement()) @db.TinyInt
-  sexo String @db.VarChar(15)
+  id   Int    @id @default(autoincrement()) 
+  sexo String 
+
+  pessoa Pessoa[]
 }
 
 model Estado {
-  id         Int    @id @default(autoincrement()) @db.TinyInt
-  uf         String @db.VarChar(2) @unique
-  nomeEstado String @db.VarChar(20)
+  id         Int    @id @default(autoincrement()) 
+  uf         String @unique
+  nomeEstado String 
 
-  cidades    Cidade
+  cidades    Cidade[]
 }
 
 model Cidade {
-  id         Int    @id @default(autoincrement()) @db.SmallInt
-  nomeCidade String @db.VarChar(50)
-  estadoId   Int    @db.TinyInt
+  id         Int    @id @default(autoincrement()) 
+  nomeCidade String 
+  estadoId   Int    
 
-  endereco   Endereco
   estado     Estado @relation(fields: [estadoId], references: [id])
+  endereco   Endereco[]
 }
 
 model Endereco {
-  id          Int     @id @default(autoincrement())
-  endereco    String  @db.VarChar(150)
-  bairro      String  @db.VarChar(50)
-  cep         Int     @map("CEP")
-  cidadeId    Int
-  numero      String  @db.VarChar(4)
-  complemento String? @db.VarChar(50)
+  id          Int       @id @default(autoincrement())
+  endereco    String  
+  bairro      String  
+  cep         Int       @map("CEP")
+  cidadeId    Int    
+  numero      String  
+  complemento String?
   
-  cidade      Cidade @relation(fields: [cidadeId], references: [id])
+  cidade      Cidade    @relation(fields: [cidadeId], references: [id])
+  relacaoPessoaEndereco RelacaoPessoaEndereco[]
 }
 
 model RelacaoPessoaEndereco{
@@ -80,68 +82,77 @@ model RelacaoPessoaEndereco{
   
   pessoa     Pessoa   @relation(fields: [pessoaId], references: [id])
   enderecos  Endereco @relation(fields: [enderecoId], references: [id])
+
+  @@id([pessoaId,enderecoId])
 }
 
 model GrauParentesco {
-  id   Int    @id @default(autoincrement()) @db.TinyInt
-  grau String db.VarChar(20)
+  id   Int    @id @default(autoincrement()) 
+  grau String 
+
   grupoFamiliares GrupoFamiliar[]
 }
 
 model GrupoFamiliar {
   id                    Int            @id @default(autoincrement())
-  cpf                   String         @unique @db.VarChar(11)
-  nome                  String         @db.VarChar(100)
-  idade                 Int            @db.TinyInt
+  cpf                   String         @unique 
+  nome                  String         
+  idade                 Int            
   grauParentescoId      Int            @map("GrauParentescoID")
-  formacao              String         @db.VarChar(50) 
-  ocupacao              String         @db.VarChar(50) 
+  formacao              String          
+  ocupacao              String          
   grauParentesco        GrauParentesco @relation(fields: [grauParentescoId], references: [id])
+
   relacaoPessoaFamilias RelacaoPessoaFamilia[]
 }
 
 model RelacaoPessoaFamilia{
+  id              Int            @id @default(autoincrement())
   pessoaId        Int?
   grupoFamiliarId Int?
   
   pessoa          Pessoa?        @relation(fields: [pessoaId], references: [id])
   grupoFamiliar   GrupoFamiliar? @relation(fields: [grupoFamiliarId], references: [id])
+
+  @@unique([pessoaId,grupoFamiliarId])
 }
 
 model Modalidade {
   id         Int    @id
-  modalidade String @db.VarChar(50)
+  modalidade String 
+
   cursos     Curso[]
 }
 
 model Curso {
   id           Int    @id
-  nomeCurso    String @db.VarChar(100)
+  nomeCurso    String 
   numeroFases  Int
-  modalidadeId Int    @db.TinyInt
+  modalidadeId Int    
 
-  graduacao    Graduacao
+  graduacao    Graduacao[]
   modalidade   Modalidade @relation(fields: [modalidadeId], references: [id])
 }
 
 model Graduacao {
-  matriculaIES            Int    @unique
-  instituicao             String @db.VarChar(100)
+  matriculaIES            Int      @id
+  instituicao             String 
   dataIngressoInstituicao DateTime
-  cursoId                 Int    @db.TinyInt
-  fase                    Int    @db.TinyInt
+  cursoId                 Int    
+  fase                    Int    
   anoSemestre             Int
 
   cursos                  Curso  @relation(fields: [cursoId], references: [id])
-  pessoa                  Pessoa
+  pessoa                  Pessoa[]
 }
 
 model Telefone {
   id                Int     @id @default(autoincrement())
-  telefone          String? @db.VarChar(12)
-  telefoneComercial String? @db.VarChar(12)
-  celular           String  @db.VarChar(12)
-  
+  telefone          String? 
+  telefoneComercial String? 
+  celular           String  
+
+  relacaoPessoaTelefone     RelacaoPessoaTelefone[]  
 }
 
 model RelacaoPessoaTelefone {
@@ -150,96 +161,103 @@ model RelacaoPessoaTelefone {
   
   pessoa     Pessoa   @relation(fields: [pessoaId], references: [id])
   telefone   Telefone @relation(fields: [telefoneId], references: [id])
+
+  @@id([pessoaId,telefoneId])
 }
 
 model Deficiencia {
-  id              Int    @id @default(autoincrement()) @db.TinyInt
-  doencaInvalidez String @db.VarChar(100)
+  id              Int      @id @default(autoincrement()) 
+  doencaInvalidez String 
+
+  relacaoPessoaDeficiencia RelacaoPessoaDeficiencia[]
 }
 
 model RelacaoPessoaDeficiencia {
+  id            Int         @id @default(autoincrement())
   pessoaId      Int
-  deficienciaId Int
+  deficienciaId Int         @unique
   
   pessoa        Pessoa      @relation(fields: [pessoaId], references: [id])
   deficiencias  Deficiencia @relation(fields: [deficienciaId], references: [id])
+
+  @@unique([pessoaId,deficienciaId])
 }
 
 model Despesas {
   id                  Int     @id @default(autoincrement())
-  despMensalHabitacao Decimal  @db.Decimal(10,2)
-  despFamTransporte   Decimal? @db.Decimal(10,2)
-  despFamDoenca       Decimal? @db.Decimal(10,2)
-  despFarEstudo       Decimal? @db.Decimal(10,2)
+  despMensalHabitacao Float  
+  despFamTransporte   Float? 
+  despFamDoenca       Float? 
+  despFarEstudo       Float? 
 
-  pessoa              Pessoa
+  pessoa              Pessoa?
 }
 
 model Moradia {
   id     Int    @id
-  tipo   String @db.VarChar(12)
+  tipo   String 
 
-  pessoa Pessoa
+  pessoa Pessoa?
 }
 
 model Documentos {
   id                  Int    @id @default(autoincrement())
-  pessoaId            Int
-  inscricao           String  @db.VarChar(200)
-  numPesGrupoFamiliar String  @db.VarChar(200) 
-  situacaoCivil       String  @db.VarChar(200)
-  rendaFamiliar       String  @db.VarChar(200)
-  impostoDeRenda      String  @db.VarChar(200)
-  bensFamiliares      String  @db.VarChar(200)
-  tipoMoradia         String  @db.VarChar(200)
-  despesasMoradia     String  @db.VarChar(200)
-  residenciaSC        String  @db.VarChar(200)
-  ensinoMedio         String  @db.VarChar(200)
-  despesaTransporte   String? @db.VarChar(200)
-  despesaDoenca       String? @db.VarChar(200)
-  deficiencia         String? @db.VarChar(200)
-  despesaEducacao     String? @db.VarChar(200)
-  adesaoUniGratuita   String  @db.VarChar(200)
+  pessoaId            Int    @unique
+  inscricao           String  
+  numPesGrupoFamiliar String   
+  situacaoCivil       String  
+  rendaFamiliar       String  
+  impostoDeRenda      String  
+  bensFamiliares      String  
+  tipoMoradia         String  
+  despesasMoradia     String  
+  residenciaSC        String  
+  ensinoMedio         String  
+  despesaTransporte   String? 
+  despesaDoenca       String? 
+  deficiencia         String? 
+  despesaEducacao     String? 
+  adesaoUniGratuita   String  
 
   pessoa              Pessoa @relation(fields: [pessoaId], references: [id])
 }
 
 model Pessoa {
   id                     Int                         @id @default(autoincrement())
-  cpf                    String                      @db.VarChar(11) @unique
-  rg                     String                      @db.VarChar(15) @unique
-  nome                   String                      @db.VarChar(25)
-  sobrenome              String                      @db.VarChar(75)
-  nomeMae                String                      @db.VarChar(100)
-  nomePai                String                      @db.VarChar(100)
+  cpf                    String                       @unique
+  rg                     String                       @unique
+  nome                   String                      
+  sobrenome              String                      
+  nomeMae                String                      
+  nomePai                String                      
   dataNascimento         DateTime 
-  naturalidade           String                      @db.VarChar(50)
-  email                  String                      @db.VarChar(50)
-  estadoCivilId          Int                         @db.TinyInt
-  corRacaId              Int                         @db.TinyInt
-  sexoId                 Int                         @db.TinyInt
+  naturalidade           String                      
+  email                  String                      
+  estadoCivilId          Int                         
+  corRacaId              Int                         
+  sexoId                 Int                         
   ensinoMedio            Boolean
   possuiGraduacao        Boolean
   assistPublica          Boolean
   resideSC               Int
-  rendaFamiliarBruta     Decimal                     @db.Decimal(10,2)
-  rendaPerCapita         Decimal                     @db.Decimal(10,2)
-  bensFamilia            Decimal                     @db.Decimal(10,2)
-  despesasId             Int
+  rendaFamiliarBruta     Float                     
+  rendaPerCapita         Float                     
+  bensFamilia            Float                     
+  despesasId             Int                         @unique
   situacaoDesemprego     Boolean
   graduacaoId            Int
-  tipoMoradiaId          Int                         @db.TinyInt
+  tipoMoradiaId          Int                         @unique      
   
   enderecos              RelacaoPessoaEndereco[]
   telefones              RelacaoPessoaTelefone[]
   estadoCivil            EstadoCivil                 @relation(fields: [estadoCivilId], references: [id])
-  corRaca                corRaca                     @relation(fields: [corRacaId], references: [id])
+  corRaca                CorRaca                     @relation(fields: [corRacaId], references: [id])
   sexo                   Sexo                        @relation(fields: [sexoId], references: [id])
-  grupoFamilia           RelacaoPessoaFamilia[]?
-  despesa                Despesas                    @relation(fields: [despesasId], references: [id])
-  deficiencia            RelacaoPessoaDeficiencia[]?
-  graduacao              Graduacao                   @relation(fields: [graduacaoId], references: [id])
+  grupoFamilia           RelacaoPessoaFamilia[]
+  despesas               Despesas                    @relation(fields: [despesasId], references: [id])
+  deficiencia            RelacaoPessoaDeficiencia[]
+  graduacao              Graduacao                   @relation(fields: [graduacaoId], references: [matriculaIES])
   tipoMoradia            Moradia                     @relation(fields: [tipoMoradiaId], references: [id])
-  documentos             Documentos
-  usuario                Usuarios?
+  documentos             Documentos?
+  usuario                Usuario?
 }
