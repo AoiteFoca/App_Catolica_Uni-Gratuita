@@ -10,6 +10,7 @@ type RootStackParamList = {
   Landing: undefined;
   Login: undefined;
   Register: undefined;
+  AfterLogin: undefined;
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList, "Register">;
@@ -31,9 +32,8 @@ const RegisterPage = () => {
       .required("Confirmação de senha é obrigatória"),
   });
 
-  const handleRegister = (values: any) => {
-    // Função de registro
-    console.log("teste", values);
+  const handleAfterLogin = (values: any) => {
+    navigation.navigate("AfterLogin");
   };
 
   const handleGoBack = () => {
@@ -61,7 +61,7 @@ const RegisterPage = () => {
             confirmPassword: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={handleRegister}
+          onSubmit={handleAfterLogin}
         >
           {({
             handleChange,
