@@ -7,7 +7,18 @@ import {
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
-import teste from "../../back-end/src/user/func";
+
+function teste(){
+  return fetch('https://192.168.5.101:3000/goodbye')
+  .then(function (response) {
+    return response.text(); // Obtém a resposta como texto diretamente
+  })
+  .then(function (text) {
+    console.log(text); // Imprime a mensagem de texto no console
+  }).catch(function (error) {
+    console.error("Errou!",error);
+  })
+}
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
