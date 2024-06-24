@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-    teste(){
+    teste(): any{
         return 'teste';
     }
     

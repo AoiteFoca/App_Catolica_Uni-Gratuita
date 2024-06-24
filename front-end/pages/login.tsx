@@ -8,23 +8,8 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
 
-function teste2(){
-  return fetch('http://192.168.5.101:3000/auth/teste')
-}
-
 function teste(){
-  return fetch('http://192.168.5.101:3000/goodbye')
-  .then(function (response) {
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    return response.text(); // Obtém a resposta como texto diretamente
-  })
-  .then(function (text) {
-    console.log(text); // Imprime a mensagem de texto no console
-  }).catch(function (error) {
-    console.error("Network request failed:", error);
-  })
+  return fetch('http://192.168.5.101:3000/auth/teste')
 }
 
 const LoginPage = () => {
@@ -62,7 +47,7 @@ const LoginPage = () => {
           {/* Botões  */}
           <View className=" pt-20 items-center">
             <TouchableOpacity className="rounded-full flex-row justify-around items-center bg-red-800 px-4 py-4 w-48">
-              <Text className="text-white text-xl font-bold" onPress={teste2}>ENTRAR</Text>
+              <Text className="text-white text-xl font-bold" onPress={teste}>ENTRAR</Text>
               <Text className="text-white right-2">
                 <Icon name="arrow-right-long" size={25} />
               </Text>
