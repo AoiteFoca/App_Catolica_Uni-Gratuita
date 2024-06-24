@@ -4,7 +4,7 @@
             "previewLimit": 50,
             "driver": "SQLite",
             "name": "uniGratuita",
-            "database": "${workspaceFolder:App_Catolica_Uni-Gratuira}/back-end/prisma/uniGratuita.db"
+            "database": "${workspaceFolder:App_Catolica_Uni-Gratuita}/back-end/prisma/uniGratuita.db"
         }
     ]
 }
