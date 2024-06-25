@@ -16,7 +16,7 @@ model TipoUsuario {
 
 model Usuario {
   id         Int     @id @default(autoincrement())
-  login      String  @map("Login")
+  login      String  @unique @map("Login")
   password   String  @map("Senha")
   userTypeId Int     @map("tipoUsuarioId")
   personId   Int?    @unique @map("PessoaId")

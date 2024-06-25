@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Patch, Request } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user-dto';
 import { UsersService } from './users.service';
 import { UserNoPass } from './types';
@@ -18,6 +18,17 @@ export class UsersController {
         return this.prisma.exists(login);
     }
     
+    @Get("findLogin")
+    async findLogin(@Request() req: any){
+        console.log(req.users)
+        return this.prisma.findLogin(req.users.login);
+    }
+
+    @Get("testesenha/:senha")
+    async testeSenha(@Param('senha') senha: string): Promise<Boolean> {
+        return this.prisma.testeSenha(senha);
+    }
+
     @Patch("changePassword/:id")
     async changePassword(@Param('id') id: any, @Body() data: UpdatePasswordDto): Promise<UserNoPass>{
         return this.prisma.changePassword(id, data);
