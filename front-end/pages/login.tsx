@@ -1,125 +1,138 @@
 import { Formik } from "formik";
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome6";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import * as Yup from "yup";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
+
+type RootStackParamList = {
+  RePassword: undefined;
+  Login: undefined;
+};
 
 const LoginSchema = Yup.object().shape({
-  cpf: Yup.string()
-    .required("CPF é obrigatório")
-    .matches(/^\d{11}$/, "CPF deve conter 11 dígitos"),
+  email: Yup.string()
+    .required("E-mail é obrigatório")
+    .email("Digite um e-mail válido"),
   password: Yup.string()
     .required("Senha é obrigatória")
     .min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
 
 const LoginPage = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const handleRePassword = () => {
+    navigation.navigate("RePassword");
+  };
+
   return (
     <>
-      <View className="flex-1 bg-white">
-        <View className="flex-[5] mt-[125px] items-center bg-white">
-          <Text className="text-2xl text-red-900 font-bold">LOGIN</Text>
-          <View className="w-[80%]">
-            <Text className="text-2xl text-center text-#282828 pt-5">
-              Preencha com os seus dados
-            </Text>
+      <StatusBar
+        style="dark"
+        translucent={true}
+        backgroundColor="rgba(0, 0, 0, 0.2)"
+      />
+      <View className="flex-1 bg-white items-center px-10 pt-40">
+        <Text className="text-3xl font-bold text-[#8B0000] mt-5 mb-5">
+          LOGIN
+        </Text>
 
-            <Formik
-              initialValues={{ cpf: "", password: "" }}
-              validationSchema={LoginSchema}
-              onSubmit={(values) => {
-                console.log(values);
-              }}
-            >
-              {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                touched,
-              }) => (
-                <>
-                  <View className="w-full pt-10 px-10">
-                    <Text className="text-lg text-red-900">CPF:</Text>
-                    <TextInput
-                      className="h-[40px] mt-[10px] px-[10px] bg-[#D9D9D9] border-[1px] border-[#676767]"
-                      onChangeText={handleChange("cpf")}
-                      onBlur={handleBlur("cpf")}
-                      value={values.cpf}
-                    />
-                    {errors.cpf && touched.cpf ? (
-                      <Text className="text-red-500">{errors.cpf}</Text>
-                    ) : null}
-                  </View>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={LoginSchema}
+          onSubmit={(values) => {
+            console.log(values);
+          }}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            setFieldTouched,
+          }) => (
+            <>
+              <View className="flex-row items-center border-b border-[#676767] mt-5 mb-3 w-full pb-2">
+                <Icon
+                  name="envelope"
+                  size={20}
+                  color="#8B0000"
+                  className="mr-2"
+                />
+                <TextInput
+                  placeholder="E-mail"
+                  className="flex-1 ml-2 h-10"
+                  onFocus={() => setFieldTouched("email", false)}
+                  onChangeText={(text) => {
+                    handleChange("email")(text);
+                    setFieldTouched("email", true, false);
+                  }}
+                  onBlur={handleBlur("email")}
+                  value={values.email}
+                />
+                {errors.email && touched.email ? (
+                  <Text className="text-red-500">{errors.email}</Text>
+                ) : null}
+              </View>
 
-                  <View className="w-full pt-5 px-10">
-                    <Text className="text-lg text-red-900">Senha:</Text>
-                    <TextInput
-                      style={styles.input}
-                      secureTextEntry={true}
-                      onChangeText={handleChange("password")}
-                      onBlur={handleBlur("password")}
-                      value={values.password}
-                    />
-                    {errors.password && touched.password ? (
-                      <Text className="text-red-500">{errors.password}</Text>
-                    ) : null}
-                  </View>
+              <View className="flex-row items-center border-b border-[#676767] mt-5 mb-3 w-full pb-2">
+                <Icon name="lock" size={20} color="#8B0000" />
+                <TextInput
+                  placeholder="Senha"
+                  className="flex-1 ml-2 h-10"
+                  secureTextEntry={true}
+                  onFocus={() => setFieldTouched("password", false)}
+                  onChangeText={(text) => {
+                    handleChange("password")(text);
+                    setFieldTouched("password", true, false);
+                  }}
+                  onBlur={handleBlur("password")}
+                  value={values.password}
+                />
+                {errors.password && touched.password ? (
+                  <Text className="text-red-500">{errors.password}</Text>
+                ) : null}
+              </View>
 
-                  <TouchableOpacity className="items-center pt-5">
-                    <Text className="text-red-900 underline text-base italic">
-                      esqueci minha senha
-                    </Text>
-                  </TouchableOpacity>
+              <Text className="text-xl text-[#282828] mt-5 mb-5">Ou</Text>
 
-                  <View className="pt-20 items-center">
-                    <TouchableOpacity
-                      className="rounded-full flex-row justify-around items-center bg-red-800 px-4 py-4 w-48"
-                      onPress={() => handleSubmit}
-                    >
-                      <Text className="text-white text-xl font-bold">
-                        ENTRAR
-                      </Text>
-                      <Text className="text-white right-2">
-                        <Icon name="arrow-right-long" size={25} />
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </>
-              )}
-            </Formik>
+              <View className="flex-row justify-around w-full mb-5">
+                <TouchableOpacity className="border border-[#676767] p-3 rounded-lg w-2/5 items-center">
+                  <Icon name="facebook" size={25} color="#8B0000" />
+                </TouchableOpacity>
+                <TouchableOpacity className="border border-[#676767] p-3 rounded-lg w-2/5 items-center">
+                  <Icon name="facebook" size={25} color="#8B0000" />
+                </TouchableOpacity>
+              </View>
 
-            <View className="pt-5">
-              <TouchableOpacity>
-                <Text className="text-red-900 underline font-bold text-base">
-                  entrar de outro modo
+              <TouchableOpacity
+                onPress={handleSubmit}
+                className="flex-row justify-center items-center bg-[#8B0000] py-3 rounded-full mt-5 w-4/5"
+              >
+                <Text className="text-white text-lg font-bold mr-2">
+                  ENTRAR
                 </Text>
+                <Icon name="arrow-right" size={25} color="white" />
               </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+            </>
+          )}
+        </Formik>
+
+        <TouchableOpacity onPress={handleRePassword} className="mt-5">
+          <Text className="text-[#8B0000] italic">
+            Não tem uma conta?{" "}
+            <Text className="underline font-bold italic">Cadastre-se</Text>
+          </Text>
+        </TouchableOpacity>
+        <View className="w-130% h-30 bg-red"></View>
       </View>
-      <View className="flex-[0.2] bg-red-900 justify-center items-"></View>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    borderColor: "#676767",
-    borderWidth: 1,
-    marginTop: 10,
-    paddingHorizontal: 10,
-    backgroundColor: "#D9D9D9",
-  },
-});
 
 export default LoginPage;

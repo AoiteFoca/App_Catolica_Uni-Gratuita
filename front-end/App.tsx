@@ -8,6 +8,7 @@ import LandingPage from "./pages/landing";
 import LoaderPage from "./pages/loaderPage";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
+import RePassword from "./pages/password";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,6 +41,11 @@ const App: React.FC = () => {
           <Stack.Screen
             name="Documents"
             component={Documents}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RePassword"
+            component={RePassword}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
