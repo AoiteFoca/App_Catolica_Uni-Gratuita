@@ -66,10 +66,10 @@ export class UsersService {
             throw new Error("Usuário não encontrado!");
         }else{ 
             //Check old password
-            //const oldPasswordMatch = await compare(data.oldPassword, user.password);
-            const oldPasswordMatch = (a,b) => a === b
+            const oldPasswordMatch = await compare(data.oldPassword, user.password);
+            //const oldPasswordMatch = (a,b) => a === b
 
-            if(!oldPasswordMatch(data.oldPassword, user.password)){
+            if(!oldPasswordMatch){
                 throw new Error("Senha antiga incorreta!");
             //If the password is empty, it will throw an error
             }else if (!data.newPassword) {
