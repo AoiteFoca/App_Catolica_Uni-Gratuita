@@ -1,4 +1,3 @@
-// components/AppBottomBar.tsx
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -14,6 +13,32 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Home")}
+        style={styles.button}
+      >
+        <View
+          style={[
+            styles.iconContainer,
+            currentTab === "Home" && styles.activeIconContainer,
+          ]}
+        >
+          <Ionicons
+            name={
+              currentTab === "Home"
+                ? "home"
+                : "home-outline"
+            }
+            size={28}
+            color={currentTab === "Home" ? "#7d0a16" : "white"}
+          />
+        </View>
+        <Text
+          style={[styles.text, currentTab === "Home" && styles.activeText]}
+        >
+          Home
+        </Text>
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate("Home")}
         style={styles.button}
@@ -51,7 +76,7 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
           ]}
         >
           <Ionicons
-            name={currentTab == "Documents" ? "documents" : "documents-outline"}
+            name={currentTab == "Documents" ? "document" : "document-outline"}
             size={28}
             color={currentTab === "Documents" ? "#7d0a16" : "white"}
           />
@@ -63,29 +88,29 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("Document1")}
         style={styles.button}
       >
         <View
           style={[
             styles.iconContainer,
-            currentTab === "MoreOptions" && styles.activeIconContainer,
+            currentTab === "Document1" && styles.activeIconContainer,
           ]}
         >
           <Ionicons
             name={
-              currentTab === "MoreOptions"
+              currentTab === "Document1"
                 ? "ellipsis-horizontal"
                 : "ellipsis-horizontal-outline"
             }
             size={28}
-            color={currentTab === "MoreOptions" ? "#7d0a16" : "white"}
+            color={currentTab === "Document1" ? "#7d0a16" : "white"}
           />
         </View>
         <Text
           style={[
             styles.text,
-            currentTab === "MoreOptions" && styles.activeText,
+            currentTab === "Document1" && styles.activeText,
           ]}
         >
           Outros
