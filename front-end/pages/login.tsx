@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -28,6 +28,10 @@ const LoginPage = () => {
     navigation.navigate("RePassword");
   };
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <>
       <StatusBar
@@ -36,6 +40,14 @@ const LoginPage = () => {
         backgroundColor="rgba(0, 0, 0, 0.2)"
       />
       <View className="flex-1 bg-white items-center px-10 pt-40">
+        {/* Botão de voltar */}
+        <TouchableOpacity
+          onPress={handleGoBack}
+          style={{ position: "absolute", left: 20, top: 50 }}
+        >
+          <Icon name="arrow-left" size={25} color="#8B0000" />
+        </TouchableOpacity>
+
         <Text className="text-3xl font-bold text-[#8B0000] mt-5 mb-5">
           LOGIN
         </Text>
@@ -129,7 +141,6 @@ const LoginPage = () => {
             <Text className="underline font-bold italic">Cadastre-se</Text>
           </Text>
         </TouchableOpacity>
-        <View className="w-130% h-30 bg-red"></View>
       </View>
     </>
   );
