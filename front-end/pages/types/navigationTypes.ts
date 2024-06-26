@@ -7,4 +7,5 @@ export type RootStackParamList = {
   Profile: undefined;
   Document1: undefined;
   Password: undefined;
+  RePassword: undefined;
 };
