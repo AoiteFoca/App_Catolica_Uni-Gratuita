@@ -20,13 +20,12 @@ export class UsersController {
     
     @Get("findLogin")
     async findLogin(@Request() req: any){
-        console.log(req.users)
         return this.prisma.findLogin(req.users.login);
     }
 
-    @Get("testesenha/:senha")
+    @Get("checkPassword/:senha")
     async testeSenha(@Param('senha') senha: string): Promise<Boolean> {
-        return this.prisma.testeSenha(senha);
+        return this.prisma.checkPassword(senha);
     }
 
     @Patch("changePassword/:id")

@@ -16,7 +16,8 @@ export class UsersService {
             data: {
                 login: data.login,
                 password: data.password,
-                userTypeId: data.userTypeId
+                userTypeId: data.userTypeId,
+                personId: data.personId
             }
         });
 
@@ -46,7 +47,7 @@ export class UsersService {
         return user
     }
 
-    async testeSenha(senha: string): Promise<Boolean>{
+    async checkPassword(senha: string): Promise<Boolean>{
         const user = await this.prisma.usuario.findFirst({
             where: {id: 1}
         });
