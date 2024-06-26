@@ -1,6 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  StackScreenProps,
+} from "@react-navigation/stack";
 import React from "react";
 import { TailwindProvider } from "tailwindcss-react-native";
 import Documents from "./pages/documents";
@@ -8,8 +11,11 @@ import LandingPage from "./pages/landing";
 import LoaderPage from "./pages/loaderPage";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
+import RePassword from "./pages/password";
+import Document1 from "./pages/document1";
+import { RootStackParamList } from "./pages/types/navigationTypes";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const App: React.FC = () => {
@@ -40,6 +46,16 @@ const App: React.FC = () => {
           <Stack.Screen
             name="Documents"
             component={Documents}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RePassword"
+            component={RePassword}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Document1"
+            component={Document1}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
