@@ -5,5 +5,6 @@ export type RootStackParamList = {
   Loader: undefined;
   Documents: undefined;
   Profile: undefined;
+  Document1: undefined;
   Password: undefined;
 };
