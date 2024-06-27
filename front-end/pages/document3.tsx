@@ -18,9 +18,9 @@ interface CustomImagePickerResult {
   cancelled: boolean;
 }
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Document2'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Document3'>;
 
-const Document2: React.FC<Props> = ({ navigation }) => {
+const Document3: React.FC<Props> = ({ navigation }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
 
   const pickDocument = async () => {
@@ -334,4 +334,4 @@ const styles = StyleSheet.create({
     },
     });
     
-    export default Document2;
+    export default Document3;
