@@ -9,6 +9,8 @@ import LoaderPage from "./pages/loaderPage";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 import Document1 from './pages/document1';
+import Document2 from './pages/document2';
+import Document3 from './pages/document3';
 import { RootStackParamList } from './pages/types/navigationTypes';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -47,6 +49,16 @@ const App: React.FC = () => {
           <Stack.Screen 
             name="Document1" 
             component={Document1}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+            name="Document2" 
+            component={Document2}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+            name="Document3" 
+            component={Document3}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

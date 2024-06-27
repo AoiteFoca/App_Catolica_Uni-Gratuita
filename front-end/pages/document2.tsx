@@ -18,9 +18,9 @@ interface CustomImagePickerResult {
   cancelled: boolean;
 }
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Document1'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Document2'>;
 
-const Document1: React.FC<Props> = ({ navigation }) => {
+const Document2: React.FC<Props> = ({ navigation }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
 
   const pickDocument = async () => {
@@ -137,25 +137,20 @@ const Document1: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Meus Documentos - Passo 1</Text>
+      <Text style={styles.title}>Meus Documentos - Passo 2</Text>
       <View style={styles.progressContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
-        <View style={[styles.progressStepContainer]}>
-          <View style={[styles.progressStep, styles.activeStep]}>
-            <Text style={[styles.progressText, styles.activeProgressText]}>1</Text>
+        {[...Array(6)].map((_, index) => (
+          <View key={index} style={styles.progressStepContainer}>
+          <View style={[styles.progressStep, index === 1 && styles.activeStep]}>
+            <Text style={[styles.progressText, index === 1 && styles.activeProgressText]}>{index + 1}</Text>
           </View>
         </View>
-        {[...Array(5)].map((_, index) => (
-          <View key={index} style={styles.progressStepContainer}>
-            <View style={styles.progressStep}>
-              <Text style={styles.progressText}>{index + 2}</Text>
-            </View>
-          </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document2')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
@@ -190,17 +185,17 @@ const Document1: React.FC<Props> = ({ navigation }) => {
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Voltar</Text>
             <Icon name="chevron-back" size={28} color="#7d0a16" />
+            <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document2')}>
+          <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Próximo</Text>
             <Icon name="chevron-forward" size={28} color="#7d0a16" />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomBarContainer}>
-        <AppBottomBar currentTab="Document1" />
+        <AppBottomBar currentTab="Document2" />
       </View>
     </View>
   );
@@ -228,6 +223,9 @@ const styles = StyleSheet.create({
   progressStepContainer: {
     alignItems: 'center',
   },
+  activeStepContainer: {
+    position: 'relative',
+  },
   progressStep: {
     width: 30,
     height: 30,
@@ -236,12 +234,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  activeStep: {
+    backgroundColor: '#7d0a16',
+  },
   progressText: {
     fontSize: 14,
     fontWeight: 'bold',
-  },
-  activeStep: {
-    backgroundColor: '#7d0a16',
   },
   activeProgressText: {
     color: 'white',
@@ -266,23 +264,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     marginTop: 20,
-  },
-  subtitle: {
+    },
+    subtitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-  },
-  explanation: {
+    },
+    explanation: {
     fontSize: 16,
-    marginTop:     5,
+    marginTop: 5,
     color: '#333',
-  },
-  documentContainer: {
+    },
+    documentContainer: {
     flex: 1,
     marginBottom: 50,
     marginTop: 20,
-  },
-  document: {
+    },
+    document: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -290,51 +288,50 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#f9f9f9',
     borderRadius: 5,
-  },
-  documentImage: {
+    },
+    documentImage: {
     width: 50,
     height: 50,
     borderRadius: 5,
-  },
-  addButton: {
+    },
+    addButton: {
     backgroundColor: 'white',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
     alignItems: 'center',
     marginBottom: 20,
-  },
-  addButtonText: {
+    },
+    addButtonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  buttonContainer: {
+    },
+    buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 100,
-  },
-  button: {
+    },
+    button: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
-  },
-  buttonText: {
+    },
+    buttonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 10,
-  },
-  bottomBarContainer: {
+    },
+    bottomBarContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-  },
-});
-
-export default Document1;
-
+    },
+    });
+    
+    export default Document2;
