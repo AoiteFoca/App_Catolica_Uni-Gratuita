@@ -1,55 +1,28 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  StackScreenProps,
+} from "@react-navigation/stack";
 import React from "react";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { TailwindProvider } from "tailwindcss-react-native";
+import Documents from "./pages/documents";
 import LandingPage from "./pages/landing";
 import LoaderPage from "./pages/loaderPage";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
+import RePassword from "./pages/password";
+import Document1 from "./pages/document1";
+import { RootStackParamList } from "./pages/types/navigationTypes";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
-
-const HomeTabs = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName: string = "";
-
-          if (route.name === "Home") {
-            iconName = "home-outline";
-          } else if (route.name === "Login") {
-            iconName = "log-in-outline";
-          } else if (route.name === "Register") {
-            iconName = "person-add-outline";
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "tomato",
-        tabBarInactiveTintColor: "gray",
-      })}
-    >
-      <Tab.Screen name="Home" component={LandingPage} />
-      <Tab.Screen name="Login" component={LoginPage} />
-      <Tab.Screen name="Register" component={RegisterPage} />
-    </Tab.Navigator>
-  );
-};
 
 const App: React.FC = () => {
   return (
     <TailwindProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Loader">
-          <Stack.Screen
-            name="HomeTabs"
-            component={HomeTabs}
-            options={{ headerShown: false, animationEnabled: false }}
-          />
           <Stack.Screen
             name="Home"
             component={LandingPage}
@@ -68,6 +41,21 @@ const App: React.FC = () => {
           <Stack.Screen
             name="Loader"
             component={LoaderPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Documents"
+            component={Documents}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RePassword"
+            component={RePassword}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Document1"
+            component={Document1}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
