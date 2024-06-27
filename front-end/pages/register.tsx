@@ -2,14 +2,22 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Formik } from "formik";
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
+import { CheckBox } from "react-native-elements";
 import * as Yup from "yup";
 
 type RootStackParamList = {
   Landing: undefined;
   Login: undefined;
   Register: undefined;
+  AfterLogin: undefined;
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList, "Register">;
@@ -19,9 +27,6 @@ const RegisterPage = () => {
 
   const validationSchema = Yup.object().shape({
     fullName: Yup.string().required("Nome completo é obrigatório"),
-    cpf: Yup.string()
-      .required("CPF é obrigatório")
-      .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido"),
     email: Yup.string().email("Email inválido").required("Email é obrigatório"),
     password: Yup.string()
       .required("Senha é obrigatória")
@@ -29,11 +34,14 @@ const RegisterPage = () => {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), ""], "As senhas devem corresponder")
       .required("Confirmação de senha é obrigatória"),
+    termsAccepted: Yup.boolean().oneOf(
+      [true],
+      "Você deve aceitar os Termos e Condições"
+    ),
   });
 
-  const handleRegister = (values: any) => {
-    // Função de registro
-    console.log("teste", values);
+  const handleAfterLogin = (values: any) => {
+    navigation.navigate("AfterLogin");
   };
 
   const handleGoBack = () => {
@@ -43,136 +51,242 @@ const RegisterPage = () => {
   const formatCPF = (value: string) => {
     return value
       .replace(/\D/g, "")
-      .replace(/(\d{3})(\d)/, "$1.$2") 
+      .replace(/(\d{3})(\d)/, "$1.$2")
       .replace(/(\d{3})(\d)/, "$1.$2")
       .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
   };
 
   return (
-    <View className="flex-1 bg-white">
-      <View className="flex-[5] mt-[75px] items-center bg-white">
-        <Text className="text-2xl text-red-900 font-bold">NOVO CADASTRO</Text>
-        <Formik
-          initialValues={{
-            fullName: "",
-            cpf: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={handleRegister}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            setFieldValue,
-            errors,
-            touched,
-          }) => (
-            <View className="w-[80%]">
-              <Text className="text-2xl text-center text-#282828 pt-2">
-                Preencha com os seus dados
-              </Text>
-
-              <View className="w-full mt-10 px-10">
-                <Text className="text-lg text-red-900">Nome Completo:</Text>
-                <TextInput
-                  className="h-[40px] mt-[5px] px-[10px] bg-[#D9D9D9] border-[1px] border-[#676767]"
-                  value={values.fullName}
-                  onChangeText={handleChange("fullName")}
-                  onBlur={handleBlur("fullName")}
-                />
-                {touched.fullName && errors.fullName && (
-                  <Text className="text-red-600">{errors.fullName}</Text>
-                )}
-              </View>
-
-              <View className="w-full mt-4 px-10">
-                <Text className="text-lg text-red-900">CPF:</Text>
-                <TextInput
-                  className="h-[40px] mt-[5px] px-[10px] bg-[#D9D9D9] border-[1px] border-[#676767]"
-                  value={values.cpf}
-                  onChangeText={(text) => setFieldValue("cpf", formatCPF(text))}
-                  onBlur={handleBlur("cpf")}
-                  keyboardType="numeric"
-                />
-                {touched.cpf && errors.cpf && (
-                  <Text className="text-red-600">{errors.cpf}</Text>
-                )}
-              </View>
-
-              <View className="w-full mt-4 px-10">
-                <Text className="text-lg text-red-900">Email:</Text>
-                <TextInput
-                  className="h-[40px] mt-[5px] px-[10px] bg-[#D9D9D9] border-[1px] border-[#676767]"
-                  value={values.email}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                />
-                {touched.email && errors.email && (
-                  <Text className="text-red-600">{errors.email}</Text>
-                )}
-              </View>
-
-              <View className="w-full mt-4 px-10">
-                <Text className="text-lg text-red-900">Senha:</Text>
-                <TextInput
-                  className="h-[40px] mt-[5px] px-[10px] bg-[#D9D9D9] border-[1px] border-[#676767]"
-                  secureTextEntry={true}
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                />
-                {touched.password && errors.password && (
-                  <Text className="text-red-600">{errors.password}</Text>
-                )}
-              </View>
-
-              <View className="w-full mt-4 px-10">
-                <Text className="text-lg text-red-900">Repita a Senha:</Text>
-                <TextInput
-                  className="h-[40px] mt-[5px] px-[10px] bg-[#D9D9D9] border-[1px] border-[#676767]"
-                  secureTextEntry={true}
-                  value={values.confirmPassword}
-                  onChangeText={handleChange("confirmPassword")}
-                  onBlur={handleBlur("confirmPassword")}
-                />
-                {touched.confirmPassword && errors.confirmPassword && (
-                  <Text className="text-red-600">{errors.confirmPassword}</Text>
-                )}
-              </View>
-
-              {/* Botões */}
-              <View className="pt-12 items-center">
-                <TouchableOpacity
-                  className="rounded-full flex-row justify-center items-center bg-red-800 px-6 py-3 w-54"
-                  onPress={() => {
-                    handleSubmit();
-                  }}
-                >
-                  <Text className="text-white text-xl font-bold">
-                    CADASTRAR
-                  </Text>
-                  <View className="ml-2">
-                    <Icon name="arrow-right-long" size={25} color="white" />
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleGoBack} className="pt-4">
-                  <Text className="text-red-900 underline text-base">
-                    voltar
-                  </Text>
-                </TouchableOpacity>
-              </View>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleGoBack} style={styles.goBackButton}>
+        <Icon name="arrow-left" size={24} color="#000" />
+      </TouchableOpacity>
+      <Text style={styles.title}>CADASTRAR</Text>
+      <Formik
+        initialValues={{
+          fullName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          termsAccepted: false,
+        }}
+        validationSchema={validationSchema}
+        onSubmit={handleAfterLogin}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          setFieldValue,
+          errors,
+          touched,
+        }) => (
+          <View style={styles.form}>
+            <View style={styles.inputContainer}>
+              <Icon
+                name="user"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Nome completo"
+                value={values.fullName}
+                onChangeText={handleChange("fullName")}
+                onBlur={handleBlur("fullName")}
+              />
             </View>
-          )}
-        </Formik>
-      </View>
-      <View className="flex-[1.4] bg-red-900 justify-center items-"></View>
+            {touched.fullName && errors.fullName && (
+              <Text style={styles.errorText}>{errors.fullName}</Text>
+            )}
+
+            <View style={styles.inputContainer}>
+              <Icon
+                name="envelope"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="E-mail"
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                keyboardType="email-address"
+              />
+            </View>
+            {touched.email && errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
+
+            <View style={styles.inputContainer}>
+              <Icon
+                name="lock"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Senha"
+                secureTextEntry={true}
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+              />
+            </View>
+            {touched.password && errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
+
+            <View style={styles.inputContainer}>
+              <Icon
+                name="lock"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Repita a senha"
+                secureTextEntry={true}
+                value={values.confirmPassword}
+                onChangeText={handleChange("confirmPassword")}
+                onBlur={handleBlur("confirmPassword")}
+              />
+            </View>
+            {touched.confirmPassword && errors.confirmPassword && (
+              <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+            )}
+
+            <View style={styles.termsContainer}>
+              <CheckBox
+                checked={values.termsAccepted}
+                onPress={() =>
+                  setFieldValue("termsAccepted", !values.termsAccepted)
+                }
+                containerStyle={styles.checkboxContainer}
+              />
+              <Text style={styles.termsText}>
+                Eu concordo com os{" "}
+                <Text style={styles.termsLink}>Termos & Condições</Text>
+              </Text>
+            </View>
+            {touched.termsAccepted && errors.termsAccepted && (
+              <Text style={styles.errorText}>{errors.termsAccepted}</Text>
+            )}
+
+            <TouchableOpacity
+              onPress={() => handleSubmit()}
+              style={styles.submitButton}
+            >
+              <Text style={styles.submitButtonText}>CRIAR CONTA</Text>
+              <Icon
+                name="arrow-right"
+                size={24}
+                color="#fff"
+                style={styles.submitButtonIcon}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
+      <View style={styles.bottomLine} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingHorizontal: 30,
+    paddingTop: 60,
+    alignItems: "flex-start",
+  },
+  goBackButton: {
+    marginLeft: 10,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#800000",
+    marginTop: 20,
+    marginBottom: 40,
+    textAlign: "left",
+    marginLeft: 10,
+  },
+  form: {
+    flex: 1,
+    marginTop: 20,
+    marginLeft: 10,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 45,
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    paddingBottom: 8,
+  },
+  inputIcon: {
+    marginRight: 10,
+    alignSelf: "center",
+  },
+  input: {
+    flex: 1,
+    fontSize: 18,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginTop: -10,
+    marginBottom: 10,
+  },
+  termsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  checkboxContainer: {
+    padding: 0,
+    marginRight: 0,
+  },
+  termsText: {
+    fontSize: 16,
+    alignSelf: "center",
+  },
+  termsLink: {
+    textDecorationLine: "underline",
+    color: "#0000EE",
+  },
+  submitButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#800000",
+    paddingVertical: 18,
+    borderRadius: 30,
+    marginTop: 20,
+  },
+  submitButtonText: {
+    color: "#fff",
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  submitButtonIcon: {
+    marginLeft: 10,
+  },
+  bottomLine: {
+    height: 30,
+    backgroundColor: "#800000",
+    width: "130%",
+    position: "absolute",
+    bottom: 0,
+  },
+});
 
 export default RegisterPage;

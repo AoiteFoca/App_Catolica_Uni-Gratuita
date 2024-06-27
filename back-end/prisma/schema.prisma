@@ -15,11 +15,12 @@ model TipoUsuario {
 }
 
 model Usuario {
-  id         Int    @id @default(autoincrement())
-  login      String @map("Login")
-  password   String @map("Senha")
-  userTypeId Int    @map("tipoUsuarioId")
-  personId   Int?   @unique @map("PessoaId")
+  id         Int     @id @default(autoincrement())
+  login      String  @unique @map("Login")
+  password   String  @map("Senha")
+  userTypeId Int     @map("tipoUsuarioId")
+  personId   Int?    @unique @map("PessoaId")
+  active     Boolean @default(true) @map("Ativo")
 
   tipoUsuario TipoUsuario @relation(fields: [userTypeId], references: [id])
   pessoa      Pessoa?     @relation(fields: [personId], references: [id])
