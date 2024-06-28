@@ -15,7 +15,7 @@ type RootStackParamList = {
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
     .required("E-mail é obrigatório")
-    .email("Digite um e-mail válido"),
+    /*.email("Digite um e-mail válido")*/,
   password: Yup.string()
     .required("Senha é obrigatória")
     .min(6, "Senha deve ter pelo menos 6 caracteres"),
@@ -115,7 +115,7 @@ const LoginPage = () => {
 
               <View className="flex-row justify-around w-full mb-5">
                 <TouchableOpacity className="border border-[#676767] p-3 rounded-lg w-2/5 items-center">
-                  <Icon name="facebook" size={25} color="#8B0000" />
+                  <Icon name="google" size={25} color="#8B0000" />
                 </TouchableOpacity>
                 <TouchableOpacity className="border border-[#676767] p-3 rounded-lg w-2/5 items-center">
                   <Icon name="facebook" size={25} color="#8B0000" />
