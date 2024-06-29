@@ -25,7 +25,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // Lógica de login pode ser adicionada aqui, se necessário
     navigation.navigate("AfterLogin");
   };
 

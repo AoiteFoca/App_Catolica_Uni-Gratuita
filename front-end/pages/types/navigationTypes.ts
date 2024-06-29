@@ -6,4 +6,18 @@ export type RootStackParamList = {
   Documents: undefined;
   Profile: undefined;
   Document1: undefined;
+  Document2: undefined;
+  Document3: undefined;
+  Document4: undefined;
+  Document5: undefined;
+  Document6: undefined;
+  Document7: undefined;
+  Document8: undefined;
+  Document9: undefined;
+  Document10: undefined;
+  Document11: undefined;
+  Document12: undefined;
+  Document13: undefined;
+  Document14: undefined;
+  Document15: undefined;
 };

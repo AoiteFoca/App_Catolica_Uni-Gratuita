@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Alert, Platf
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from './types/navigationTypes';
-import AppBottomBar from '../components/appBar';
+import { RootStackParamList } from '../types/navigationTypes';
+import AppBottomBar from '../../components/appBar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as FileSystem from 'expo-file-system';
 
@@ -28,7 +28,7 @@ const Document1: React.FC<Props> = ({ navigation }) => {
       const result = await DocumentPicker.getDocumentAsync();
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const { uri: originalUri, name } = result.assets[0];
-        const uri = Platform.OS === 'android' ? originalUri : `file://${originalUri}`;
+        const uri = Platform.OS === 'android' ? originalUri : originalUri;
         const limitedName = name.length > 20 ? `${name.substring(0, 20)}...` : name;
         setDocuments(prevDocuments => [...prevDocuments, { uri, name: limitedName }]);
       }
@@ -50,21 +50,16 @@ const Document1: React.FC<Props> = ({ navigation }) => {
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
-      }) as unknown as CustomImagePickerResult;
-      if (pickerResult.cancelled === true) {
+      });
+  
+      if (!pickerResult.canceled && pickerResult.assets && pickerResult.assets.length > 0) {
+        const { uri } = pickerResult.assets[0];
+        let name = uri.split('/').pop() || 'image.jpg';
+        name = name.length > 20 ? `${name.substring(0, 20)}...` : name;
+        setDocuments(prevDocuments => [...prevDocuments, { uri, name }]);
+      } else {
         console.log('Captura de imagem cancelada');
-        return;
       }
-  
-      if (!pickerResult.uri) {
-        console.log('URI da imagem não está disponível');
-        return;
-      }
-  
-      const { uri: imageUri } = pickerResult;
-      const name = imageUri.split('/').pop() || 'image.jpg'; //nome arquivo
-      setDocuments(prevDocuments => [...prevDocuments, { uri: imageUri, name }]);
-      
     } catch (err) {
       console.error('Erro ao escolher a imagem:', err);
     }
@@ -73,33 +68,7 @@ const Document1: React.FC<Props> = ({ navigation }) => {
   const deleteDocument = (index: number) => {
     setDocuments(prevDocuments => prevDocuments.filter((_, i) => i !== index));
   };
-
-  const downloadDocument = async (uri: string, name: string) => {
-    try {
-      const fileInfo = await FileSystem.getInfoAsync(uri);
-      if (!fileInfo.exists) {
-        Alert.alert('Erro', `O arquivo não existe: ${name}`);
-        return;
-      }
   
-      const downloadResumable = FileSystem.createDownloadResumable(
-        uri,
-        `${FileSystem.documentDirectory}${name}`
-      );
-  
-      const downloadResult = await downloadResumable.downloadAsync();
-  
-      if (downloadResult && downloadResult.uri) {
-        const { uri: fileUri } = downloadResult;
-        Alert.alert('Download', `Arquivo baixado com sucesso: ${name}`);
-      } else {
-        Alert.alert('Erro', `Falha ao baixar o arquivo: ${name}`);
-      }
-    } catch (err) {
-      console.error('Erro ao baixar o arquivo:', err);
-      Alert.alert('Erro', `Falha ao baixar o arquivo: ${name}`);
-    }
-  };
 
   const showOptions = (index: number) => {
     const document = documents[index];
@@ -107,10 +76,6 @@ const Document1: React.FC<Props> = ({ navigation }) => {
       'Opções',
       `O que deseja fazer com ${document.name}?`,
       [
-        {
-          text: 'Download',
-          onPress: () => downloadDocument(document.uri, document.name),
-        },
         {
           text: 'Excluir',
           onPress: () => deleteDocument(index),
@@ -127,8 +92,8 @@ const Document1: React.FC<Props> = ({ navigation }) => {
 
   const renderDocument = ({ item, index }: { item: Document; index: number }) => (
     <View style={styles.document}>
-      <Text numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
       <Image source={{ uri: item.uri }} style={styles.documentImage} />
+      <Text numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
       <TouchableOpacity onPress={() => showOptions(index)}>
         <Icon name="ellipsis-vertical" size={24} color="#7d0a16" />
       </TouchableOpacity>
@@ -137,7 +102,7 @@ const Document1: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Meus Documentos - Passo 1</Text>
+      <Text style={styles.title}>Meus Documentos</Text>
       <View style={styles.progressContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" size={28} color="#7d0a16" />
@@ -161,12 +126,21 @@ const Document1: React.FC<Props> = ({ navigation }) => {
       </View>
 
       <View style={styles.documentationInfo}>
-        <Text style={styles.subtitle}>Comprovante de inscrição/recadastro</Text>
-        <Text style={styles.explanation}>
-          Envie abaixo o comprovante de inscrição ou de recadastro referente ao cadastro preenchido no sistema informatizado do Estado de Santa Catarina
-        </Text>
-      </View>
-
+  <View style={styles.subtitleContainer}>
+    <Text style={styles.subtitle}>Comprovante de inscrição/recadastro</Text>
+  </View>
+  <Text style={styles.explanation}>
+    Envie abaixo o comprovante de inscrição ou de recadastro referente ao cadastro preenchido no sistema informatizado do Estado de Santa Catarina
+  </Text>
+  <TouchableOpacity
+    style={styles.helpIcon}
+    onPress={() => {
+      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
+    }}
+  >
+    <Icon name="help-circle-outline" size={24} color="#7d0a16" />
+  </TouchableOpacity>
+</View>
       <View style={styles.documentContainer}>
         <Text style={styles.subtitle}>Enviados</Text>
         <FlatList
@@ -189,10 +163,6 @@ const Document1: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Voltar</Text>
-            <Icon name="chevron-back" size={28} color="#7d0a16" />
-          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document2')}>
             <Text style={styles.buttonText}>Próximo</Text>
             <Icon name="chevron-forward" size={28} color="#7d0a16" />
@@ -215,7 +185,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 70,
+    marginTop: 60,
     textAlign: 'center',
   },
   progressContainer: {
@@ -256,7 +226,7 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   documentationInfo: {
-    marginBottom: 20,
+    marginBottom: 0,
     padding: 10,
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -265,17 +235,26 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    marginTop: 20,
+    marginTop: 5,
   },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  subtitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 10,
   },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   explanation: {
-    fontSize: 16,
-    marginTop:     5,
+    fontSize: 14,
+    marginTop: 5,
+    marginBottom: 10,
     color: '#333',
+  },
+  helpIcon: {
+    marginLeft: 310,
   },
   documentContainer: {
     flex: 1,
@@ -298,7 +277,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: 'white',
-    paddingVertical: 10,
+        paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
     alignItems: 'center',
@@ -312,7 +291,9 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 100,
+    marginBottom: 80,
+    paddingHorizontal: 100,
+    alignItems: 'center',
   },
   button: {
     flexDirection: 'row',
@@ -337,4 +318,3 @@ const styles = StyleSheet.create({
 });
 
 export default Document1;
-
