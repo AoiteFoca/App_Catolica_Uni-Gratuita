@@ -3,15 +3,16 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { Formik } from "formik";
 import React from "react";
 import {
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  StyleSheet,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome6";
 import { CheckBox } from "react-native-elements";
+import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
+import { registerUser } from "../request/Users/createUser";
 
 type RootStackParamList = {
   Landing: undefined;
@@ -41,7 +42,10 @@ const RegisterPage = () => {
   });
 
   const handleAfterLogin = (values: any) => {
-    navigation.navigate("AfterLogin");
+    values["login"] = values.email;
+    values["userTypeId"] = 1;
+    registerUser(values).then((res) => console.log(res));
+    // navigation.navigate("AfterLogin");
   };
 
   const handleGoBack = () => {
