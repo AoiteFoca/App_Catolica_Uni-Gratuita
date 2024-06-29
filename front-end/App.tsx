@@ -1,18 +1,16 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  StackScreenProps,
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+import Toast from "react-native-toast-message";
 import { TailwindProvider } from "tailwindcss-react-native";
+import Document1 from "./pages/document1";
 import Documents from "./pages/documents";
 import LandingPage from "./pages/landing";
 import LoaderPage from "./pages/loaderPage";
 import LoginPage from "./pages/login";
-import RegisterPage from "./pages/register";
 import RePassword from "./pages/password";
-import Document1 from "./pages/document1";
+import RegisterPage from "./pages/register";
 import { RootStackParamList } from "./pages/types/navigationTypes";
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -59,6 +57,7 @@ const App: React.FC = () => {
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
+        <Toast />
       </NavigationContainer>
     </TailwindProvider>
   );
