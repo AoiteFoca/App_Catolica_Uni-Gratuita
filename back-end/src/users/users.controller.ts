@@ -41,8 +41,21 @@ export class UsersController {
   }
 
   @Get('exists/:login')
-  async exists(@Param('login') login: string): Promise<boolean> {
-    return this.prisma.exists(login);
+  async exists(@Param('login') login: string, @Res() res: Response): Promise<any> {
+    try{
+      const result = await this.prisma.exists(login.toLowerCase());
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Usuário já cadastrado!',
+        data: result,
+      });
+      } catch (error) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          success: false,
+          message: 'Erro ao verificar usuário',
+          error: error.message,
+        });
+    }
   }
 
   @Get('findLogin')
@@ -55,12 +68,12 @@ export class UsersController {
     return this.prisma.checkPassword(senha);
   }
 
-  @Patch('changePassword/:id')
+  @Patch('changePassword/:login')
   async changePassword(
-    @Param('id') id: any,
+    @Param('login') login: any,
     @Body() data: UpdatePasswordDto,
   ): Promise<UserNoPass> {
-    return this.prisma.changePassword(id, data);
+    return this.prisma.changePassword(login, data);
   }
 
   @Patch('deactivate/:id')

@@ -26,7 +26,7 @@ export class UsersService {
 
   async exists(login: string): Promise<boolean> {
     const userLogin = await this.prisma.usuario.findFirst({
-      where: { login: login },
+      where: { login: login.toLowerCase() },
     });
 
     return !!userLogin;
@@ -57,10 +57,10 @@ export class UsersService {
     return users;
   }
 
-  async changePassword(id: any, data: UpdatePasswordDto): Promise<UserNoPass> {
+  async changePassword(login: any, data: UpdatePasswordDto): Promise<UserNoPass> {
     //Catch user by id
-    const user = await this.prisma.usuario.findUnique({
-      where: { id: parseInt(id) },
+    const user = await this.prisma.usuario.findFirst({
+      where: { login: login },
     });
 
     //Check if user exists
@@ -80,7 +80,7 @@ export class UsersService {
         try {
           data.newPassword = await hash(data.newPassword, 10);
           const updateUser = await this.prisma.usuario.update({
-            where: { id: parseInt(id) },
+            where: { login: login },
             data: { password: data.newPassword },
           });
 
