@@ -12,6 +12,7 @@ import {
 import { CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
+import StyledInput from "../components/styledInput";
 import { registerUser } from "../request/Users/createUser";
 
 type RootStackParamList = {
@@ -85,9 +86,21 @@ const RegisterPage = () => {
           setFieldValue,
           errors,
           touched,
-        }) => (
+          setFieldTouched,
+        }: any) => (
           <View style={styles.form}>
-            <View style={styles.inputContainer}>
+            <StyledInput
+              icon="user"
+              placeholder="Nome completo"
+              value={values.email}
+              onChangeText={handleChange("fullName")}
+              onFocus={() => setFieldTouched("fullName", true, false)}
+              onBlur={handleBlur("fullName")}
+              keyboardType="default"
+              error={errors.fullName}
+              touched={touched.fullName}
+            />
+            {/* <View style={styles.inputContainer}>
               <Icon
                 name="user"
                 size={20}
@@ -104,7 +117,7 @@ const RegisterPage = () => {
             </View>
             {touched.fullName && errors.fullName && (
               <Text style={styles.errorText}>{errors.fullName}</Text>
-            )}
+            )} */}
 
             <View style={styles.inputContainer}>
               <Icon

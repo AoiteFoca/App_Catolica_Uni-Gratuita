@@ -39,9 +39,7 @@ const RePasswordPage = () => {
       <Formik
         initialValues={{ email: "" }}
         validationSchema={RecuperationSchema}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        onSubmit={(values) => {}}
       >
         {({
           handleChange,
