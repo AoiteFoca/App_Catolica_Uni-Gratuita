@@ -1,11 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { StatusBar } from "expo-status-bar";
 
 type RootStackParamList = {
   RePassword: undefined;
@@ -13,10 +13,8 @@ type RootStackParamList = {
 };
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .required("E-mail é obrigatório")
-    /*.email("Digite um e-mail válido")*/,
-  password: Yup.string()
+  email: Yup.string().required("E-mail é obrigatório"),
+  /*.email("Digite um e-mail válido")*/ password: Yup.string()
     .required("Senha é obrigatória")
     .min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
@@ -123,7 +121,7 @@ const LoginPage = () => {
               </View>
 
               <TouchableOpacity
-                onPress={handleSubmit}
+                onPress={() => handleSubmit}
                 className="flex-row justify-center items-center bg-[#8B0000] py-3 rounded-full mt-5 w-4/5"
               >
                 <Text className="text-white text-lg font-bold mr-2">
