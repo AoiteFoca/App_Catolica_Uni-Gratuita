@@ -12,6 +12,8 @@ export class UsersService {
   private readonly log = new Logger(UsersService.name);
 
   async createUser(data: CreateUserDto): Promise<any> {
+   //const hashedPassword = await hash(data.password, 10);
+    data.password = await hash(data.password, 10);
     const user = await this.prisma.usuario.create({
       data: {
         login: data.login,
@@ -20,16 +22,19 @@ export class UsersService {
         personId: data.personId,
       },
     });
-
-    return 'Usuário criado com sucesso!';
+    delete user.password;
   }
 
   async exists(login: string): Promise<boolean> {
     const userLogin = await this.prisma.usuario.findFirst({
-      where: { login: login.toLowerCase() },
+      where: { login: login },
     });
 
-    return !!userLogin;
+    if(userLogin == null){
+      return false;      
+    }else{
+      return true;
+    }
   }
 
   //Safe search for login
