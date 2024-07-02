@@ -109,25 +109,25 @@ const Document6: React.FC<Props> = ({ navigation }) => {
         <View style={styles.progressLine} />
         {[...Array(6)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
-          <View style={[styles.progressStep, index === 1 && styles.activeStep]}>
-            <Text style={[styles.progressText, index === 1 && styles.activeProgressText]}>{index + 1}</Text>
+          <View style={[styles.progressStep, index === 2 && styles.activeStep]}>
+            <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 4}</Text>
           </View>
         </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document7')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.documentationInfo}>
-        <Text style={styles.subtitle}>Comprovante do número de pessoas do grupo familiar</Text>
+        <Text style={styles.subtitle}>Comprovante de bens do grupo familiar</Text>
         <Text style={styles.explanation}>
-        Carteira de Identidade com CPF ou CNH (dentro da validade) de todos os integrantes do grupo familiar, podendo ser apresentada certidão de nascimento com CPF no caso dos menores de 14 anos e/ou Certidão de Óbito dos responsáveis, em caso de dependente, quando for o caso
+            Envie abaixo a declaração de imposto de renda de pessoa física com os comprovantes de bens do grupo familiar. Caso não possua bens, enviar a declaração de não propriedade de bens do grupo
         </Text>
         <TouchableOpacity
     style={styles.helpIcon}
     onPress={() => {
-      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
+      Alert.alert('Ajuda', 'a) Apresentar a declaração de imposto de renda de pessoa física com os comprovantes dos bens se o grupo familiar for possuidor de bens - Comprovar através de documentos a posse do bem, exemplo: residência – registro do imóvel; carro – documento do carro; empresa – contrato social, etc...\nb) Declaração de não propriedade de bens do grupo familiar no caso dos grupos familiares que não possuem bens em seu nome - O grupo familiar que não possuir bens fará o preenchimento da Declaração de Não propriedade de Bens do grupo familiar.');
     }}
   >
     <Icon name="help-circle-outline" size={24} color="#7d0a16" />
@@ -156,11 +156,11 @@ const Document6: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document1')}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document5')}>
             <Icon name="chevron-back" size={28} color="#7d0a16" />
             <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document3')}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document7')}>
             <Text style={styles.buttonText}>Próximo</Text>
             <Icon name="chevron-forward" size={28} color="#7d0a16" />
           </TouchableOpacity>

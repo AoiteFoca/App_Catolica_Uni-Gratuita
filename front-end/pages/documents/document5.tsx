@@ -109,25 +109,24 @@ const Document5: React.FC<Props> = ({ navigation }) => {
         <View style={styles.progressLine} />
         {[...Array(6)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
-          <View style={[styles.progressStep, index === 1 && styles.activeStep]}>
-            <Text style={[styles.progressText, index === 1 && styles.activeProgressText]}>{index + 1}</Text>
+          <View style={[styles.progressStep, index === 2 && styles.activeStep]}>
+            <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 3}</Text>
           </View>
         </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document6')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.documentationInfo}>
-        <Text style={styles.subtitle}>Comprovante do número de pessoas do grupo familiar</Text>
+        <Text style={styles.subtitle}>Declaração de imposto de renda</Text>
         <Text style={styles.explanation}>
-        Carteira de Identidade com CPF ou CNH (dentro da validade) de todos os integrantes do grupo familiar, podendo ser apresentada certidão de nascimento com CPF no caso dos menores de 14 anos e/ou Certidão de Óbito dos responsáveis, em caso de dependente, quando for o caso
-        </Text>
+        Envie abaixo a Declaração do Imposto de Renda de Pessoa Física completa, ano base 2023 e exercício 2024, de todos os integrantes do grupo familiar, quando for o caso        </Text>
         <TouchableOpacity
     style={styles.helpIcon}
     onPress={() => {
-      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
+      Alert.alert('Ajuda', 'No caso de isenção de imposto de renda, isto é, não declaração de imposto de renda por não atingir o teto para obrigatoriedade da declaração, inserir a negativa da declaração de imposto de renda de todas as pessoas que não declaram imposto de renda de pessoa física para a Receita Federal do Brasil. A consulta pode ser realizada através do endereço abaixo, onde deverá ser informado o “CPF da pessoa”, a “data de nascimento dela” e ano que deverá ser “2024”: https://www.restituicao.receita.fazenda.gov.br/#/ Faça um print da tela da consulta, copie e cole em um arquivo no formato word e depois “salve em formato pdf”.');
     }}
   >
     <Icon name="help-circle-outline" size={24} color="#7d0a16" />
@@ -156,11 +155,11 @@ const Document5: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document1')}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document4')}>
             <Icon name="chevron-back" size={28} color="#7d0a16" />
             <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document3')}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document6')}>
             <Text style={styles.buttonText}>Próximo</Text>
             <Icon name="chevron-forward" size={28} color="#7d0a16" />
           </TouchableOpacity>

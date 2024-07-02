@@ -132,14 +132,6 @@ const Document1: React.FC<Props> = ({ navigation }) => {
   <Text style={styles.explanation}>
     Envie abaixo o comprovante de inscrição ou de recadastro referente ao cadastro preenchido no sistema informatizado do Estado de Santa Catarina
   </Text>
-  <TouchableOpacity
-    style={styles.helpIcon}
-    onPress={() => {
-      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
-    }}
-  >
-    <Icon name="help-circle-outline" size={24} color="#7d0a16" />
-  </TouchableOpacity>
 </View>
       <View style={styles.documentContainer}>
         <Text style={styles.subtitle}>Enviados</Text>
@@ -185,7 +177,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 60,
+    marginTop: 50,
     textAlign: 'center',
   },
   progressContainer: {

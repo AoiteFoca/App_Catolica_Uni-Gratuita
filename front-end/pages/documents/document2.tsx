@@ -122,12 +122,12 @@ const Document2: React.FC<Props> = ({ navigation }) => {
       <View style={styles.documentationInfo}>
         <Text style={styles.subtitle}>Comprovante do número de pessoas do grupo familiar</Text>
         <Text style={styles.explanation}>
-        Carteira de Identidade com CPF ou CNH (dentro da validade) de todos os integrantes do grupo familiar, podendo ser apresentada certidão de nascimento com CPF no caso dos menores de 14 anos e/ou Certidão de Óbito dos responsáveis, em caso de dependente, quando for o caso
+        Envie abaixo a carteira de Identidade com CPF ou CNH (dentro da validade) de todos os integrantes do grupo familiar.
         </Text>
         <TouchableOpacity
     style={styles.helpIcon}
     onPress={() => {
-      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
+      Alert.alert('Ajuda', 'Pode ser apresentada certidão de nascimento com CPF no caso dos menores de 14 anos e/ou Certidão de Óbito dos responsáveis, em caso de dependente, quando for o caso');
     }}
   >
     <Icon name="help-circle-outline" size={24} color="#7d0a16" />

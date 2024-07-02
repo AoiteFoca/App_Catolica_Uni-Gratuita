@@ -114,7 +114,7 @@ const Document3: React.FC<Props> = ({ navigation }) => {
           </View>
         </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document4')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
@@ -122,12 +122,12 @@ const Document3: React.FC<Props> = ({ navigation }) => {
       <View style={styles.documentationInfo}>
         <Text style={styles.subtitle}>Comprovante da situação civil</Text>
         <Text style={styles.explanation}>
-        Certidão de casamento, escritura pública de união estável – tabelionato de notas, ou Declaração de União Estável, quando for o caso, do acadêmico, dos pais ou responsáveis ou demais membros do grupo familiar que residam com o acadêmico, dependam ou usufruam da mesma renda. Ou comprovante de separação ou divórcio, quando for o caso. E declaração de situação de não convivência marital para os maiores de 18 anos
+        Envie abaixo os documentos que comprovem a sua situação civil ou das pessoas que residem na mesma residência que você
         </Text>
         <TouchableOpacity
     style={styles.helpIcon}
     onPress={() => {
-      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
+      Alert.alert('Ajuda', 'Certidão de casamento, escritura pública de união estável – tabelionato de notas, ou Declaração de União Estável, quando for o caso, do acadêmico, dos pais ou responsáveis ou demais membros do grupo familiar que residam com o acadêmico, dependam ou usufruam da mesma renda. Ou comprovante de separação ou divórcio, quando for o caso. E declaração de situação de não convivência marital para os maiores de 18 anos');
     }}
   >
     <Icon name="help-circle-outline" size={24} color="#7d0a16" />
@@ -160,7 +160,7 @@ const Document3: React.FC<Props> = ({ navigation }) => {
             <Icon name="chevron-back" size={28} color="#7d0a16" />
             <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document4')}>
             <Text style={styles.buttonText}>Próximo</Text>
             <Icon name="chevron-forward" size={28} color="#7d0a16" />
           </TouchableOpacity>

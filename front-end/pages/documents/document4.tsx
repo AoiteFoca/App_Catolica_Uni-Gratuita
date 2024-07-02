@@ -110,24 +110,24 @@ const Document4: React.FC<Props> = ({ navigation }) => {
         {[...Array(6)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
           <View style={[styles.progressStep, index === 2 && styles.activeStep]}>
-            <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 1}</Text>
+            <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 2}</Text>
           </View>
         </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document5')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.documentationInfo}>
-        <Text style={styles.subtitle}>Comprovante da situação civil</Text>
+        <Text style={styles.subtitle}>Comprovante de renda familiar e carteira de trabalho digital</Text>
         <Text style={styles.explanation}>
-        Certidão de casamento, escritura pública de união estável – tabelionato de notas, ou Declaração de União Estável, quando for o caso, do acadêmico, dos pais ou responsáveis ou demais membros do grupo familiar que residam com o acadêmico, dependam ou usufruam da mesma renda. Ou comprovante de separação ou divórcio, quando for o caso. E declaração de situação de não convivência marital para os maiores de 18 anos
+        Envie abaixo os comprovantes de renda familiar de cada membro da sua família e a sua carteira de trabalho digital. (Veja no ícone de ajuda quais serão os documentos aceitos como comprovantes de renda)
         </Text>
         <TouchableOpacity
     style={styles.helpIcon}
     onPress={() => {
-      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
+      Alert.alert('Ajuda', 'Referente a renda Bruta familiar mensal, seguem os tipos de comprovantes aceitos abaixo descritos \n \nI - Assalariado: (folha de pagamento, holerite, contracheque, recibo de pagamento, proventos de pagamento etc.) \n - Os três últimos demonstrativos de pagamento no caso de renda fixa. \n - Os seis últimos no caso de renda variável (comissão, gratificação, hora extra, etc..). \n \nII - Autônomo ou Profissional Liberal: \n - Decore emitida por contador; \n - CND – Certidão Negativa de Débito Estadual. \n - Guia de Recolhimento de INSS dos três últimos meses. \n - Extrato bancário dos últimos três meses; \n - Notas fiscais de serviço; \n \nIII - Trabalhador Informal ou Eventual (“bicos”): \n - Declaração de rendimentos, conforme modelo em anexo, com média dos três últimos meses, com assinatura reconhecida em cartório. \n - Extrato bancário dos últimos três meses; \n - Guia de Recolhimento de INSS dos três últimos meses. \n \nIV - Proprietário Individual ou Sócio Proprietário de Empresa Ativa: \n - Pró-labore e Decore assinado por contador responsável; \n - CND - Certidão Negativa de Débito Estadual e Municipal. \n - Imposto de Renda completo de Pessoa Jurídica. \n - Contrato social atualizado; \n - Balanço financeiro da empresa; \n(Documentos devem ser emitidos pelo Contador da Empresa e assinados por ele como responsável). \n \nV - Proprietário Individual ou Sócio Proprietário de Empresa Inativa: \n - Protocolo de baixa em uma das esferas: municipal, estadual ou federal, ou \n - Declaração de Imposto de Renda de Pessoa Jurídica de Inatividade. \n \nVI - Microempreendedor Individual \n - Declaração Anual do Simples Nacional do MEI (DASN-SIMEI). \n - Certificado do MEI – CCMEI. \n - Cartão CNPJ. \n - Declaração de Faturamento dos últimos 12 meses assinada por contador ou DECORE – Declaração Comprobatória de Percepção de Rendimentos, emitida por Contador - como o MEI não tem obrigatoriedade legal de ter um contador cuidando do CNPJ, ele poderá emitir e assinar a declaração com o faturamento da empresa onde conste valor de entradas “bruto”, valor de saídas, pagamentos, e valor que o microempreendedor recebe mensalmente pelos trabalhos/serviço prestados; \n \nVII - Aposentado, Pensionista ou Beneficiário Auxílio-Doença ou outros auxílios do INSS: \n - Extrato obtido via site do INSS, ou comprovante de rendimento que contenha o número do benefício recebido, o nome do beneficiário e o valor recebido mensalmente. \n - Mesmo no caso de aposentadoria ou recebimento de pensão por morte, a apresentação da Carteira de Trabalho Digital é indispensável. \n \nVIII - Produtor Rural/Pescadores \n - Declaração do Sindicato dos Produtores Rurais, Colônia de Pescadores ou do próprio agricultor/pescador com assinatura reconhecida em cartório, conforme modelo disponível em anexo, constando a atividade rural/pesqueira desenvolvida e a remuneração bruta (média mensal). \n - Caso as atividades rurais sejam realizadas em terras de terceiros, apresentar o contrato de arrendamento. \n \nIX - Estagiário: \n - Termo de Compromisso de Estágio/Contrato de Estágio, indicando o valor mensal recebido; ou declaração do supervisor de estágio constando o valor mensal recebido pelo estagiário (com assinatura); ou ainda comprovante de recebimento dos valores de bolsa-auxílio fornecido pela empresa ou órgão público (se for o caso). \n \nX - Desempregado: \n - Cópia do último comprovante de seguro-desemprego (se estiver recebendo). \n - Rescisão contratual. \n - Comprovante do saque do Fundo de Garantia por Tempo de Serviço – FGTS. \n - Declaração de não exercício de atividade remunerada, se estiver desempregado a mais de 06 meses e/ou não estiver recebendo seguro-desemprego. \n \nXI - Recebimento de Pensão Alimentícia: \n - Declaração constando o valor da pensão alimentícia, com a assinatura de quem paga reconhecida em cartório, no caso de não haver decisão judicial de pagamento de pensão alimentícia ou; \n - Decisão judicial de pagamento da pensão e últimas três folhas de pagamento de quem paga a pensão alimentícia (no caso da decisão judicial da pensão alimentícia, fazer menção ao salário-mínimo nacional, não é necessária apresentação das folhas de pagamento de quem paga a pensão). \n \nXII - Receber Aluguel de Imóveis: \n - Declaração constando o valor recebido mensalmente, com assinatura reconhecida em cartório, conforme modelo disponível em anexo, ou os contratos de locação com os inquilinos devidamente assinados e registrados em cartório. \n \n XIII - Não exercício de atividade remunerada (exemplo: “Do Lar”): \n - Declaração do não exercício de atividade remunerada, conforme modelo disponível em anexo. \n - Esta declaração é necessária para todos os desempregados a mais de 06 meses e que não estiverem recebendo seguro-desemprego e para os que não exercem atividade remunerada. \n \nA Carteira de Trabalho Digital de todos os integrantes do grupo familiar, maiores de 14 anos, que deverá ser cadastrada no Portal Emprega Brasil, do Governo Federal. O PDF deverá ser emitido pelo aplicativo da Carteira de Trabalho Digital com data de no mínimo 5 dias antes da entrega dos documentos.');
     }}
   >
     <Icon name="help-circle-outline" size={24} color="#7d0a16" />
@@ -156,18 +156,18 @@ const Document4: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document2')}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document3')}>
             <Icon name="chevron-back" size={28} color="#7d0a16" />
             <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document5')}>
             <Text style={styles.buttonText}>Próximo</Text>
             <Icon name="chevron-forward" size={28} color="#7d0a16" />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomBarContainer}>
-        <AppBottomBar currentTab="Document2" />
+        <AppBottomBar currentTab="Document3" />
       </View>
     </View>
   );
