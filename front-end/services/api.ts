@@ -31,7 +31,7 @@ api.interceptors.response.use(
       text1: "Erro",
       text2: error.response?.data?.message || "Algo deu errado!",
     });
-    return Promise.reject(error);
+    return error;
   }
 );
 

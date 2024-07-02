@@ -17,7 +17,7 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private prisma: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
   async createUser(
@@ -25,7 +25,15 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<any> {
     try {
-      const result = await this.prisma.createUser(data);
+      const userExists = await this.usersService.exists(data.login);
+      if (userExists) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          success: false,
+          message: 'Login já existe!',
+        });
+      }
+
+      const result = await this.usersService.createUser(data);
       return res.status(HttpStatus.CREATED).json({
         success: true,
         message: 'Usuário criado com sucesso!',
@@ -42,29 +50,29 @@ export class UsersController {
 
   @Get('exists/:login')
   async exists(@Param('login') login: string): Promise<boolean> {
-    return this.prisma.exists(login);
+    return this.usersService.exists(login);
   }
 
   @Get('findLogin')
   async findLogin(@Request() req: any) {
-    return this.prisma.findLogin(req.users.login);
+    return this.usersService.findLogin(req.users.login);
   }
 
   @Get('checkPassword/:senha')
-  async testeSenha(@Param('senha') senha: string): Promise<Boolean> {
-    return this.prisma.checkPassword(senha);
+  async testeSenha(@Param('senha') senha: string): Promise<any> {
+    return this.usersService.checkPassword(senha);
   }
 
   @Patch('changePassword/:id')
   async changePassword(
-    @Param('id') id: any,
+    @Param('id') id: string,
     @Body() data: UpdatePasswordDto,
   ): Promise<UserNoPass> {
-    return this.prisma.changePassword(id, data);
+    return this.usersService.changePassword(id, data);
   }
 
   @Patch('deactivate/:id')
-  async deactivateUser(@Param('id') id: any): Promise<void> {
-    return this.prisma.deactivateUser(id);
+  async deactivateUser(@Param('id') id: string): Promise<void> {
+    return this.usersService.deactivateUser(id);
   }
 }

@@ -2,13 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Formik } from "formik";
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
@@ -28,14 +22,14 @@ const RegisterPage = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required("Nome completo é obrigatório"),
+    fullName: Yup.string().required("Nome é obrigatório"),
     email: Yup.string().email("Email inválido").required("Email é obrigatório"),
     password: Yup.string()
       .required("Senha é obrigatória")
       .min(6, "A senha deve ter pelo menos 6 caracteres"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), ""], "As senhas devem corresponder")
-      .required("Confirmação de senha é obrigatória"),
+      .required("Senha é obrigatória"),
     termsAccepted: Yup.boolean().oneOf(
       [true],
       "Você deve aceitar os Termos e Condições"
@@ -92,7 +86,7 @@ const RegisterPage = () => {
             <StyledInput
               icon="user"
               placeholder="Nome completo"
-              value={values.email}
+              value={values.fullName}
               onChangeText={handleChange("fullName")}
               onFocus={() => setFieldTouched("fullName", true, false)}
               onBlur={handleBlur("fullName")}
@@ -119,7 +113,19 @@ const RegisterPage = () => {
               <Text style={styles.errorText}>{errors.fullName}</Text>
             )} */}
 
-            <View style={styles.inputContainer}>
+            <StyledInput
+              icon="envelope"
+              placeholder="E-mail"
+              value={values.email}
+              onChangeText={handleChange("email")}
+              onFocus={() => setFieldTouched("fullName", true, false)}
+              onBlur={handleBlur("email")}
+              keyboardType="email-address"
+              error={errors.email}
+              secureTextEntry={false}
+              touched={touched.email}
+            />
+            {/* <View style={styles.inputContainer}>
               <Icon
                 name="envelope"
                 size={20}
@@ -134,12 +140,23 @@ const RegisterPage = () => {
                 onBlur={handleBlur("email")}
                 keyboardType="email-address"
               />
-            </View>
-            {touched.email && errors.email && (
+            </View> */}
+            {/* {touched.email && errors.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
-            )}
+            )} */}
 
-            <View style={styles.inputContainer}>
+            <StyledInput
+              icon="lock"
+              placeholder="Senha"
+              value={values.password}
+              onChangeText={handleChange("password")}
+              onFocus={() => setFieldTouched("password", true, false)}
+              onBlur={handleBlur("password")}
+              keyboardType="default"
+              secureTextEntry={true}
+              touched={touched.password}
+            />
+            {/* <View style={styles.inputContainer}>
               <Icon
                 name="lock"
                 size={20}
@@ -157,9 +174,23 @@ const RegisterPage = () => {
             </View>
             {touched.password && errors.password && (
               <Text style={styles.errorText}>{errors.password}</Text>
+            )} */}
+            {touched.password && errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
             )}
+            <StyledInput
+              icon="lock"
+              placeholder="Repita a senha"
+              value={values.confirmPassword}
+              onChangeText={handleChange("confirmPassword")}
+              onFocus={() => setFieldTouched("confirmPassword", true, false)}
+              onBlur={handleBlur("confirmPassword")}
+              keyboardType="default"
+              secureTextEntry={true}
+              touched={touched.confirmPassword}
+            />
 
-            <View style={styles.inputContainer}>
+            {/* <View style={styles.inputContainer}>
               <Icon
                 name="lock"
                 size={20}
@@ -175,6 +206,8 @@ const RegisterPage = () => {
                 onBlur={handleBlur("confirmPassword")}
               />
             </View>
+            {touched.confirmPassword && errors.confirmPassword && (
+              <Text style={styles.errorText}>{errors.confirmPassword}</Text> */}
             {touched.confirmPassword && errors.confirmPassword && (
               <Text style={styles.errorText}>{errors.confirmPassword}</Text>
             )}
@@ -223,6 +256,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingTop: 60,
     alignItems: "flex-start",
+    gap: 20,
   },
   goBackButton: {
     marginLeft: 10,

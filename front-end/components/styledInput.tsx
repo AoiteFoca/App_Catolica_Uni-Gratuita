@@ -1,10 +1,11 @@
 // StyledInput.tsx
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   TextInput,
   TextInputProps,
+  TouchableOpacity,
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -19,6 +20,7 @@ interface StyledInputProps {
   keyboardType?: TextInputProps["keyboardType"];
   error?: string;
   touched?: boolean;
+  secureTextEntry?: boolean;
 }
 
 const StyledInput: React.FC<StyledInputProps> = ({
@@ -31,7 +33,14 @@ const StyledInput: React.FC<StyledInputProps> = ({
   keyboardType = "default",
   error,
   touched,
+  secureTextEntry = false,
 }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
   return (
     <View style={styles.container}>
       <Icon name={icon} size={20} style={styles.icon} />
@@ -44,8 +53,27 @@ const StyledInput: React.FC<StyledInputProps> = ({
         onBlur={onBlur}
         keyboardType={keyboardType}
         placeholderTextColor="#666"
+        secureTextEntry={isPasswordVisible}
       />
-      {error && touched ? <Text style={styles.errorText}>{error}</Text> : null}
+      {secureTextEntry && (
+        <TouchableOpacity onPress={togglePasswordVisibility}>
+          <Icon
+            name={isPasswordVisible ? "eye-slash" : "eye"}
+            size={20}
+            style={styles.eyeIcon}
+          />
+        </TouchableOpacity>
+      )}
+      {error && touched && (
+        <Text
+          style={[
+            styles.errorText,
+            secureTextEntry ? styles.errorTextBelow : {},
+          ]}
+        >
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
@@ -68,9 +96,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     fontSize: 16,
   },
+  eyeIcon: {
+    padding: 10,
+  },
   errorText: {
     color: "red",
     marginLeft: 10,
+  },
+  errorTextBelow: {
+    marginLeft: 0,
+    marginTop: 5,
+    alignSelf: "flex-start",
   },
 });
 
