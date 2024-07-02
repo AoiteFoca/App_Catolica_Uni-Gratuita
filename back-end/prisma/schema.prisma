@@ -204,21 +204,21 @@ model Moradia {
 model Documentos {
   id                  Int    @id @default(autoincrement())
   pessoaId            Int    @unique
-  inscricao           String  
-  numPesGrupoFamiliar String   
-  situacaoCivil       String  
-  rendaFamiliar       String  
-  impostoDeRenda      String  
-  bensFamiliares      String  
-  tipoMoradia         String  
-  despesasMoradia     String  
-  residenciaSC        String  
-  ensinoMedio         String  
+  inscricao           String?  
+  numPesGrupoFamiliar String?   
+  situacaoCivil       String?  
+  rendaFamiliar       String?  
+  impostoDeRenda      String?  
+  bensFamiliares      String?  
+  tipoMoradia         String?  
+  despesasMoradia     String?  
+  residenciaSC        String?  
+  ensinoMedio         String?
   despesaTransporte   String? 
   despesaDoenca       String? 
   deficiencia         String? 
   despesaEducacao     String? 
-  adesaoUniGratuita   String  
+  adesaoUniGratuita   String?
 
   pessoa              Pessoa @relation(fields: [pessoaId], references: [id])
 }
