@@ -22,8 +22,8 @@ const LoginSchema = Yup.object().shape({
 const LoginPage = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const handleRePassword = () => {
-    navigation.navigate("RePassword");
+  const handleLogin = () => {
+    navigation.navigate("AfterLogin");
   };
 
   const handleGoBack = () => {
