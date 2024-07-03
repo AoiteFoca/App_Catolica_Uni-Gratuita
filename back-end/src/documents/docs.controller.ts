@@ -14,23 +14,17 @@ import {
 import { Express, Response } from 'express';
 import { DocsService } from './docs.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 
 @Controller('docs')
 export class DocsController {
-  constructor(private docs: DocsService) {}
+  constructor(private readonly docs: DocsService) {}
   private readonly log = new Logger(DocsService.name);
 
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: diskStorage({
-        destination: 'src/documents/files/',
-        filename: (req, file, save) => {
-          const filename = `${Date.now()}-${file.originalname.replace(/\s/g, '')}`;
-          save(null, filename);
-        },
-      }),
+      storage: memoryStorage(), // Usando armazenamento em memória
     }),
   )
   async uploadFile(
@@ -48,7 +42,7 @@ export class DocsController {
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
-        message: 'Erro ao salvar arquivo!',
+        message: `Erro ao salvar arquivo "${file.originalname}"!`,
         error: error.message,
       });
     }
