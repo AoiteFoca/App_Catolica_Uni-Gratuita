@@ -12,6 +12,8 @@ import LoginPage from "./pages/login";
 import RePassword from "./pages/password";
 import RegisterPage from "./pages/register";
 import { RootStackParamList } from "./pages/types/navigationTypes";
+import AfterLogin from "./pages/afterLogin";
+import Profile from "./pages/profile";
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -54,6 +56,16 @@ const App: React.FC = () => {
           <Stack.Screen
             name="Document1"
             component={Document1}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AfterLogin"
+            component={AfterLogin}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

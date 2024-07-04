@@ -1,11 +1,10 @@
+import React from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome6";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
-import StyledInput from "../components/styledInput";
 
 const RecuperationSchema = Yup.object().shape({
   email: Yup.string()
@@ -39,7 +38,10 @@ const RePasswordPage = () => {
       <Formik
         initialValues={{ email: "" }}
         validationSchema={RecuperationSchema}
-        onSubmit={(values) => {}}
+        onSubmit={(values) => {
+          // Lógica de envio do formulário (a ser implementada)
+          console.log(values);
+        }}
       >
         {({
           handleChange,
@@ -49,35 +51,40 @@ const RePasswordPage = () => {
           errors,
           touched,
           setFieldTouched,
-        }: any) => (
-          <>
-            <StyledInput
-              icon="envelope"
+        }) => (
+          <View className="flex-row items-center border-b border-[#676767] mt-5 mb-3 w-full pb-2">
+            <Icon name="envelope" size={20} color="#8B0000" className="mr-2" />
+            <TextInput
               placeholder="E-mail"
-              value={values.email}
-              onChangeText={handleChange("email")}
+              className="flex-1 ml-2 h-10"
               onFocus={() => setFieldTouched("email", true, false)}
+              onChangeText={(text) => {
+                handleChange("email")(text);
+                setFieldTouched("email", true, false);
+              }}
               onBlur={handleBlur("email")}
-              keyboardType="email-address"
-              error={errors.email}
-              touched={touched.email}
+              value={values.email}
             />
-            <TouchableOpacity
-              className="rounded-full flex-row justify-between items-center bg-red-800 px-4 m-12 py-3"
-              onPress={handleSubmit}
-            >
-              <Text className="w-full text-white text-lg text-center font-bold">
-                ENVIAR CÓDIGO
-              </Text>
-              <Text className="text-white right-6">
-                <Icon name="arrow-right" size={18} />
-              </Text>
-            </TouchableOpacity>
-          </>
+            {errors.email && touched.email ? (
+              <Text className="text-red-500">{errors.email}</Text>
+            ) : null}
+          </View>
         )}
       </Formik>
 
-      <TouchableOpacity onPress={handleGoBack} style={{ marginTop: 20 }}>
+      <TouchableOpacity
+        className="rounded-full flex-row justify-between items-center bg-red-800 px-4 mt-12 py-3"
+        onPress={() => {}}
+      >
+        <Text className="w-full text-white text-lg text-center font-bold">
+          ENVIAR CÓDIGO
+        </Text>
+        <Text className="text-white right-6">
+          <Icon name="arrow-right" size={18} />
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleGoBack} className="mt-20">
         <Text>
           <Icon name="arrow-left" size={20} color="#8B0000" /> Voltar
         </Text>
