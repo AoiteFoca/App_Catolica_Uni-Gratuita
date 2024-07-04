@@ -99,6 +99,11 @@ const Document2: React.FC<Props> = ({ navigation }) => {
     </View>
   );
 
+  const saveDocuments = () => {
+    // Lógica para salvar os documentos
+    Alert.alert('Salvar', 'Documentos salvos com sucesso!');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Meus Documentos</Text>
@@ -107,7 +112,7 @@ const Document2: React.FC<Props> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
-        {[...Array(6)].map((_, index) => (
+        {[...Array(5)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
           <View style={[styles.progressStep, index === 1 && styles.activeStep]}>
             <Text style={[styles.progressText, index === 1 && styles.activeProgressText]}>{index + 1}</Text>
@@ -155,14 +160,19 @@ const Document2: React.FC<Props> = ({ navigation }) => {
         }}>
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
+        <View style={styles.centerButtonContainer}>
+          <TouchableOpacity style={styles.saveButton} onPress={saveDocuments}>
+            <Text style={styles.saveButtonText}>Salvar</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document1')}>
-            <Icon name="chevron-back" size={28} color="#7d0a16" />
+            <Icon style={styles.iconBack} name="chevron-back" size={24} color="#7d0a16" />
             <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document3')}>
             <Text style={styles.buttonText}>Próximo</Text>
-            <Icon name="chevron-forward" size={28} color="#7d0a16" />
+            <Icon name="chevron-forward" size={24} color="#7d0a16" />
           </TouchableOpacity>
         </View>
       </View>
@@ -275,12 +285,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 50,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     },
     addButtonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
+    },
+    centerButtonContainer: {
+      alignItems: 'center',
+    },
+    saveButton: {
+      backgroundColor: '#2F82ED',
+      paddingVertical: 10, 
+      paddingHorizontal: 15, 
+      alignItems: 'center',
+      borderRadius: 50,
+      marginBottom: 10,
+      width: 100,
+    },
+    saveButtonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: 'bold'
     },
     buttonContainer: {
     flexDirection: 'row',
@@ -294,12 +321,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
+    width: 125,
     },
     buttonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: 5,
+    },
+    iconBack: {
+      marginLeft: -10,
     },
     bottomBarContainer: {
     position: 'absolute',

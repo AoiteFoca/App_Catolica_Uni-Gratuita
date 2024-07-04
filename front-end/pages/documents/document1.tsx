@@ -108,19 +108,14 @@ const Document1: React.FC<Props> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
-        <View style={[styles.progressStepContainer]}>
-          <View style={[styles.progressStep, styles.activeStep]}>
-            <Text style={[styles.progressText, styles.activeProgressText]}>1</Text>
-          </View>
-        </View>
         {[...Array(5)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
-            <View style={styles.progressStep}>
-              <Text style={styles.progressText}>{index + 2}</Text>
-            </View>
+          <View style={[styles.progressStep, index === 0 && styles.activeStep]}>
+            <Text style={[styles.progressText, index === 0 && styles.activeProgressText]}>{index + 1}</Text>
           </View>
+        </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document2')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>

@@ -107,10 +107,10 @@ const Document12: React.FC<Props> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
-        {[...Array(6)].map((_, index) => (
+        {[...Array(5)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
-          <View style={[styles.progressStep, index === 2 && styles.activeStep]}>
-            <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 10}</Text>
+          <View style={[styles.progressStep, index === 1 && styles.activeStep]}>
+            <Text style={[styles.progressText, index === 1 && styles.activeProgressText]}>{index + 11}</Text>
           </View>
         </View>
         ))}
