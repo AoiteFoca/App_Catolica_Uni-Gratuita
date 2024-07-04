@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/layout";
+import Icon from "react-native-vector-icons/FontAwesome6";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -35,12 +36,26 @@ const Profile = () => {
           <TouchableOpacity className="flex-row items-center mb-5 mt-1">
             <Ionicons name="mail-outline" size={38} color="#742a2a" />
             <Text className="ml-4 text-base text-stone-700">
-              Alterar e-mail
+              Alterar Cadastro
             </Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-row items-center mb-5 mt-1">
-            <Ionicons name="lock-closed-outline" size={38} color="#742a2a" />
-            <Text className="ml-4 text-base text-stone-700">Alterar senha</Text>
+            <Ionicons name="color-palette-outline" size={38} color="#742a2a" />
+            <Text className="ml-4 text-base text-stone-700">Alterar Tema</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="flex-row items-center mb-5 mt-1">
+            <Ionicons name="document-text-outline" size={38} color="#742a2a" />
+            <Text className="ml-4 text-base text-stone-700">
+              Termos & Condições
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="flex-row items-center mb-5 mt-1">
+            <Ionicons name="help-circle-outline" size={38} color="#742a2a" />
+            <Text className="ml-4 text-base text-stone-700">Ajuda</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="flex-row items-center mb-5 mt-1">
+            <Ionicons name="bug-outline" size={38} color="#742a2a" />
+            <Text className="ml-4 text-base text-stone-700">Bug/Feedback</Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-row items-center mb-5 mt-1">
             <Ionicons name="log-out-outline" size={38} color="#742a2a" />
