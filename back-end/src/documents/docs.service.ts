@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 @Injectable()
@@ -11,35 +11,46 @@ export class DocsService {
 
     async saveFile(file: Express.Multer.File, data: any): Promise<any> {
         try{
-            const filePath = join('src/documents/files/', `${Date.now()}-${file.originalname.replace(/\s/g, '')}`);
-            
+            const dirPath = join(`src/documents/files/pessoa${data.pessoaId}/${data.categoria}/`);
+            const fileName = `${Date.now()}-${file.originalname.replace(/\s/g, '')}`;
+            const filePath = join(dirPath, fileName);
+            const sentDoc = await this.prisma.documentos.findFirst({where: {pessoaId: parseInt(data.pessoaId)}});
+
+            //Verifies if the directory exists, if not, creates it
+            if(!existsSync(dirPath)){
+                mkdirSync(dirPath, {recursive: true});
+            }
+
             //Function to save file in the server
             writeFileSync(filePath, file.buffer);
-        
-            const docs = await this.prisma.documentos.create({
-                data: {
-                    pessoaId: 1,
-                    inscricao: file.originalname,
-                    numPesGrupoFamiliar: file.originalname,
-                    situacaoCivil: file.originalname,
-                    rendaFamiliar: file.originalname,
-                    impostoDeRenda: file.originalname,
-                    bensFamiliares: file.originalname,
-                    tipoMoradia: file.originalname,
-                    despesasMoradia: file.originalname,
-                    residenciaSC: file.originalname,
-                    ensinoMedio: file.originalname,
-                    despesaTransporte: file.originalname,
-                    despesaDoenca: file.originalname,
-                    deficiencia: file.originalname,
-                    despesaEducacao: file.originalname,
-                    adesaoUniGratuita: file.originalname,
+            
+            //Verifies if the person already sent data to the database earlier
+            if(sentDoc){
+                const docs = await this.prisma.documentos.update({
+                    where: {pessoaId: parseInt(data.pessoaId)},
+                    data: {
+                        inscricao: dirPath,
+                    }
+                })
+
+                return {
+                    filename: file.filename,
+                    path: filePath,
+                    doc: docs
                 }
-            })
-            return {
-                filename: file.filename,
-                path: filePath,
-                doc: docs
+            }else{
+                const docs = await this.prisma.documentos.create({
+                    data: {
+                        pessoaId: parseInt(data.pessoaId),
+                        inscricao: dirPath,
+                    }
+                })
+
+                return {
+                    filename: file.filename,
+                    path: filePath,
+                    doc: docs
+                }
             }
         }catch(error){
             this.log.log(`Arquivo "${file.originalname}" não salvo!`);
