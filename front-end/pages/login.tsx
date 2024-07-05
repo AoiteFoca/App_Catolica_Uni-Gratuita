@@ -1,13 +1,14 @@
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
 
 type RootStackParamList = {
+  Register: undefined;
   RePassword: undefined;
   Login: undefined;
 };
@@ -21,6 +22,10 @@ const LoginSchema = Yup.object().shape({
 
 const LoginPage = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const handleRegister = () => {
+    navigation.navigate("Register");
+  };
 
   const handleRePassword = () => {
     navigation.navigate("RePassword");
@@ -121,7 +126,7 @@ const LoginPage = () => {
               </View>
 
               <TouchableOpacity
-                onPress={() => handleSubmit}
+                onPress={handleSubmit}
                 className="flex-row justify-center items-center bg-[#8B0000] py-3 rounded-full mt-5 w-4/5"
               >
                 <Text className="text-white text-lg font-bold mr-2">
@@ -133,10 +138,16 @@ const LoginPage = () => {
           )}
         </Formik>
 
-        <TouchableOpacity onPress={handleRePassword} className="mt-5">
+        <TouchableOpacity onPress={handleRegister} className="mt-5">
           <Text className="text-[#8B0000] italic">
             Não tem uma conta?{" "}
             <Text className="underline font-bold italic">Cadastre-se</Text>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleRePassword} className="mt-5">
+          <Text className="text-[#8B0000] italic">
+            Esqueceu sua senha?{" "}
+            <Text className="underline font-bold italic">Recuperar senha</Text>
           </Text>
         </TouchableOpacity>
       </View>
