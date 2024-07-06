@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { unlink, readdir } from 'fs/promises';
 import { join } from 'path';
 
 @Injectable()
@@ -13,13 +14,12 @@ export class DocsService {
         try{
             //#region Variables/Utils
             //Creates the file path and name
-            const date = new Date();
-            const dirPath = join(`src/documents/files/pessoa${data.pessoaId}/${data.categoria}/`);
-            const fileName = changeFileName(`pessoa${data.pessoaId}-${date.toLocaleDateString().replace(/\//g, '-')}-${file.originalname.replace(/\s/g, '')}`);
+            const dirPath = join(`src/documents/files/pessoa${data.personId}/${data.category}/`);
+            const fileName = await this.changeFileName(data.personId, data.category, file.originalname, dirPath);
             const filePath = join(dirPath, fileName);
             
             //Verifies if the person already sent data to the database earlier
-            const sentDoc = await this.prisma.documentos.findFirst({where: {pessoaId: parseInt(data.pessoaId)}});
+            const sentDoc = await this.prisma.documentos.findFirst({where: {pessoaId: parseInt(data.personId)}});
             
             //Checks if file is bigger than 5MB
             if(file.size > (5242880)){
@@ -28,27 +28,28 @@ export class DocsService {
             
             //Dinamically creates the object to update the database
             const dataToUpdate = {}
-            dataToUpdate[data.categoria] = filePath;
+            dataToUpdate[data.category] = dirPath;
             
             //Dinamically creates the object to create the database
             const dataToCreate = {
-                pessoaId: parseInt(data.pessoaId)
+                pessoaId: parseInt(data.personId)
             }
-            dataToCreate[data.categoria] = filePath;
+            dataToCreate[data.category] = dirPath;
+            console.log(dataToCreate)
             //#endregion
-
+            
             //Verifies if the directory exists, if not, creates it
             if(!existsSync(dirPath)){
                 mkdirSync(dirPath, {recursive: true});
             }
-
+            
             //Function to save file in the server
             writeFileSync(filePath, file.buffer);
             
             //Verifies if the person already sent data to the database earlier
             if(sentDoc){
                 await this.prisma.documentos.update({
-                    where: {pessoaId: parseInt(data.pessoaId)},
+                    where: {pessoaId: parseInt(data.personId)},
                     data: dataToUpdate
                 })
             }else{
@@ -57,19 +58,57 @@ export class DocsService {
                 })
             }
         }catch(error){
-            this.log.log(`Arquivo "${file.originalname}" não salvo!`);
+            this.log.log(`Erro ao salvar arquivo "${error}"!`);
             throw new Error(error);
         }
     }
-}
 
-function changeFileName(filename){
-    if(filename.length > 50){
-        const fileExtension = filename.substring(filename.lastIndexOf('.'));
-        const maxNameLength = 50 - fileExtension.length;
+    async deleteFile(data: any): Promise<any>{
+        const dirPath = join(`src/documents/files/pessoa${data.personId}/${data.category}/`);
+        const fileName = `pessoa${data.personId}-${data.category}-${data.sequence}`;
 
-        filename = filename.substring(0, maxNameLength) + fileExtension;
+        const files = await readdir(dirPath);
+        for(const file of files){
+            if(file.includes(fileName)){
+                await unlink(join(dirPath, file));
+            }
+        }
+
+        const updatedFiles = await readdir(dirPath);
+        if(updatedFiles.length == 0){
+            await this.prisma.documentos.update({
+                where: {pessoaId: parseInt(data.personId)},
+                data: {
+                    [data.category]: null
+                }
+            })
+        }
+
+        return files
     }
-
-    return filename
+    
+    //#region Extra Functions
+    async changeFileName(personId, category, filename, dirPath){
+        let updateName = filename;
+        let sequence = 0;
+    
+        //Ajusts the filename to have a lenbth of 25 characters
+        if(updateName.length > 25){
+            const fileExtension = updateName.substring(updateName.lastIndexOf('.'));
+            const maxNameLength = 25 - fileExtension.length;
+    
+            updateName = updateName.substring(0, maxNameLength) + fileExtension;
+        }
+        
+        const files = await readdir(dirPath); 
+        for(const name in files){
+            if(files[name].includes(`pessoa${personId}-${category}-${sequence}`)){
+                sequence++;
+            }
+        }
+    
+        updateName = `pessoa${personId}-${category}-${sequence}-${updateName.replace(/\s/g, '')}`;
+        return updateName
+    }
+    //#endregion
 }

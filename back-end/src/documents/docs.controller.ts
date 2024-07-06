@@ -1,12 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Logger,
-  Patch,
   Post,
-  Request,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -43,6 +42,27 @@ export class DocsController {
       return res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
         message: `Erro ao salvar arquivo "${file.originalname}"!`,
+        error: error.message,
+      });
+    }
+  }
+
+  @Delete('delete')
+  async deleteFile(
+    @Body() data: any,
+    @Res() res: Response
+  ): Promise<any> {
+    try {
+      const result = await this.docs.deleteFile(data);
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Arquivo deletado com sucesso!',
+        data: result,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        success: false,
+        message: `Erro ao deletar arquivo!`,
         error: error.message,
       });
     }
