@@ -22,6 +22,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Document1'>;
 
 const Document1: React.FC<Props> = ({ navigation }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
+  const userId = '{{user.id}}'; 
+  const documentType = 'inscricao';
 
   const pickDocument = async () => {
     try {
@@ -90,6 +92,39 @@ const Document1: React.FC<Props> = ({ navigation }) => {
     );
   };
 
+  const uploadDocuments = async () => {
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('documentType', documentType);
+  
+    for (const [index, document] of documents.entries()) {
+      const response = await fetch(document.uri);
+      const blob = await response.blob();
+  
+      formData.append(`document${index}`, blob, document.name);
+    }
+  
+    try {
+      const response = await fetch('docs/upload', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (response.ok) {
+        Alert.alert('Sucesso', 'Documentos enviados com sucesso!');
+      } else {
+        Alert.alert('Erro', 'Falha ao enviar documentos.');
+      }
+    } catch (error) {
+      console.error('Erro ao enviar documentos:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao enviar os documentos.');
+    }
+  };
+  
+
   const renderDocument = ({ item, index }: { item: Document; index: number }) => (
     <View style={styles.document}>
       <Image source={{ uri: item.uri }} style={styles.documentImage} />
@@ -149,6 +184,9 @@ const Document1: React.FC<Props> = ({ navigation }) => {
         }}>
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonSend} onPress={uploadDocuments}>
+            <Text style={styles.buttonText}>Enviar Documentos</Text>
+          </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document2')}>
             <Text style={styles.buttonText}>Próximo</Text>
@@ -264,7 +302,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: 'white',
-        paddingVertical: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
     alignItems: 'center',
@@ -281,6 +319,16 @@ const styles = StyleSheet.create({
     marginBottom: 80,
     paddingHorizontal: 100,
     alignItems: 'center',
+  },
+  buttonSend: {
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    width: '54%',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 50,
+    marginBottom: 10,
+    alignSelf: 'center',
   },
   button: {
     flexDirection: 'row',
