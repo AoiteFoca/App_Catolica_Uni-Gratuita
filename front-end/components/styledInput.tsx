@@ -45,6 +45,7 @@ const StyledInput: React.FC<StyledInputProps> = ({
     <View style={styles.container}>
       <Icon name={icon} size={20} style={styles.icon} />
       <TextInput
+        className="text-sm"
         style={styles.input}
         placeholder={placeholder}
         value={value}

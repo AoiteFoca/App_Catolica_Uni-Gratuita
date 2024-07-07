@@ -1,9 +1,9 @@
-import { Text, Touchable, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import Layout from "../components/layout";
 
 const AfterLogin = () => {
   return (
-    <Layout currentTab="Menu">
+    <Layout currentTab="AfterLogin">
       <View className="bg-red-900 w-full h-full flex-1 flex-col justify-center">
         <View className="justify-center items-center mt-20">
           <Text className="text-[28px] text-white font-bold text-center">

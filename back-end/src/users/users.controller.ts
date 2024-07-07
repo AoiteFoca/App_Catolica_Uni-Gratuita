@@ -12,10 +12,7 @@ import {
 import { Response } from 'express';
 import { CreateUserDto } from './dtos/create-user-dto';
 import { UpdatePasswordDto } from './dtos/update-pass-dto';
-import { UserNoPass } from './types';
 import { UsersService } from './users.service';
-import { errorMonitor } from 'events';
-import { readFile } from 'fs/promises';
 
 @Controller('users')
 export class UsersController {
@@ -56,7 +53,7 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<any> {
     try {
-      const result = await this.prisma.exists(login);
+      const result = await this.usersService.exists(login);
       return res.status(HttpStatus.OK).json({
         success: true,
         message: 'Usuário já cadastrado!',
@@ -74,7 +71,7 @@ export class UsersController {
   @Get('findLogin')
   async findLogin(@Request() req: any, @Res() res: Response): Promise<any> {
     try {
-      const result = await this.prisma.findLogin(req.users.login);
+      const result = await this.usersService.findLogin(req.users.login);
       return res.status(HttpStatus.OK).json({
         success: true,
         message: 'Login encontrado com sucesso!',
@@ -95,10 +92,10 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<any> {
     try {
-      const result = await this.prisma.checkPassword(senha);
+      const result = await this.usersService.checkPassword(senha);
       return res.status(HttpStatus.OK).json({
         success: true,
-        message: 'Senha verificada com sucesso!',
+        message: 'Usuário autenticado com sucesso!',
         data: result,
       });
     } catch (error) {
@@ -117,7 +114,7 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<any> {
     try {
-      const result = await this.prisma.changePassword(login, data);
+      const result = await this.usersService.changePassword(login, data);
       return res.status(HttpStatus.OK).json({
         success: true,
         message: 'Senha alterada com sucesso!',
@@ -138,15 +135,15 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<any> {
     try {
-      await this.prisma.deactivateUser(id);
+      await this.usersService.deactivateUser(id);
       return res.status(HttpStatus.OK).json({
         success: true,
-        message: 'Usuário desativado com sucesso!',
+        message: 'Usuário desativado com sucesso!',
       });
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
-        message: 'Erro ao desativar usuário',
+        message: 'Erro ao desativar usuário',
         error: error.message,
       });
     }

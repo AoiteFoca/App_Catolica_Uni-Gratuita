@@ -1,7 +1,9 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Layout from "../components/layout";
-import StyledInput from "../components/styledInput";
+import { RootStackParamList } from "./types/navigationTypes";
 
 const Documents: React.FC = () => {
   const initialDocuments = [
@@ -85,6 +87,7 @@ const Documents: React.FC = () => {
   const [documents, setDocuments] = useState(initialDocuments);
   const [documentsPending, setDocumentsPending] = useState<any>([]);
   const [documentsOK, setDocumentsOK] = useState<any>([]);
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     updateDocumentStatus();
@@ -170,6 +173,7 @@ const Documents: React.FC = () => {
         <View className="absolute bottom-5 w-full flex items-center">
           <TouchableOpacity
             onPress={() => {
+              navigation.navigate("Document1");
               /* Função para continuar enviando documentos */
             }}
             className="w-[300px] bg-blue-500 py-3 rounded-full flex-row justify-center items-center"
@@ -177,7 +181,7 @@ const Documents: React.FC = () => {
             <Text className="text-white font-bold text-lg">
               CONTINUAR ENVIANDO
             </Text>
-            <Text className="text-white font-bold text-lg ml-2">→</Text>
+            <Text className="text-white font-bold text-lg ml-2"></Text>
           </TouchableOpacity>
         </View>
       </View>

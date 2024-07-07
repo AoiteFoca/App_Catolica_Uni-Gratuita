@@ -37,7 +37,7 @@ const RegisterPage = () => {
   });
 
   const handleAfterLogin = (values: any) => {
-    values["login"] = values.email;
+    values["login"] = values.fullName;
     values["userTypeId"] = 1;
     registerUser(values).then((res) => console.log(res));
     // navigation.navigate("AfterLogin");

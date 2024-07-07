@@ -1,21 +1,23 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import * as Yup from "yup";
+import StyledInput from "../components/styledInput";
+import { loginUser } from "../request/Users/loginUser";
 
 type RootStackParamList = {
   Register: undefined;
   RePassword: undefined;
   Login: undefined;
+  AfterLogin: undefined;
 };
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string().required("E-mail é obrigatório"),
-  /*.email("Digite um e-mail válido")*/ password: Yup.string()
+  login: Yup.string().required("E-mail é obrigatório"),
+  password: Yup.string()
     .required("Senha é obrigatória")
     .min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
@@ -35,13 +37,20 @@ const LoginPage = () => {
     navigation.goBack();
   };
 
+  const loginFunction = (values: any) => {
+    console.log(values);
+    loginUser(values).then((response) => {
+      navigation.navigate("AfterLogin");
+    });
+  };
+
   return (
     <>
-      <StatusBar
+      {/* <StatusBar
         style="dark"
         translucent={true}
         backgroundColor="rgba(0, 0, 0, 0.2)"
-      />
+      /> */}
       <View className="flex-1 bg-white items-center px-10 pt-40">
         {/* Botão de voltar */}
         <TouchableOpacity
@@ -56,11 +65,9 @@ const LoginPage = () => {
         </Text>
 
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ login: "", password: "" }}
           validationSchema={LoginSchema}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
+          onSubmit={loginFunction}
         >
           {({
             handleChange,
@@ -70,9 +77,23 @@ const LoginPage = () => {
             errors,
             touched,
             setFieldTouched,
-          }) => (
+          }: any) => (
             <>
-              <View className="flex-row items-center border-b border-[#676767] mt-5 mb-3 w-full pb-2">
+              <StyledInput
+                icon="envelope"
+                placeholder="E-mail/Usuário"
+                value={values.login}
+                onChangeText={(text) => {
+                  handleChange("login")(text);
+                  setFieldTouched("login", true, false);
+                }}
+                onFocus={() => setFieldTouched("login", true, false)}
+                onBlur={handleBlur("login")}
+                keyboardType="default"
+                error={errors.login}
+                touched={touched.login}
+              />
+              {/* <View className="flex-row items-center border-b border-[#676767] mt-5 mb-3 w-full pb-2">
                 <Icon
                   name="envelope"
                   size={20}
@@ -93,9 +114,9 @@ const LoginPage = () => {
                 {errors.email && touched.email ? (
                   <Text className="text-red-500">{errors.email}</Text>
                 ) : null}
-              </View>
+              </View> */}
 
-              <View className="flex-row items-center border-b border-[#676767] mt-5 mb-3 w-full pb-2">
+              {/* <View className="flex-row items-center border-b border-[#676767] mt-5 mb-3 w-full pb-2">
                 <Icon name="lock" size={20} color="#8B0000" />
                 <TextInput
                   placeholder="Senha"
@@ -109,10 +130,24 @@ const LoginPage = () => {
                   onBlur={handleBlur("password")}
                   value={values.password}
                 />
-                {errors.password && touched.password ? (
-                  <Text className="text-red-500">{errors.password}</Text>
-                ) : null}
-              </View>
+              </View> */}
+              <StyledInput
+                icon="lock"
+                placeholder="Senha"
+                value={values.password}
+                onChangeText={(text) => {
+                  handleChange("password")(text);
+                  setFieldTouched("password", true, false);
+                }}
+                onFocus={() => setFieldTouched("password", true, false)}
+                onBlur={handleBlur("password")}
+                keyboardType="default"
+                touched={touched.password}
+                secureTextEntry={true}
+              />
+              {errors.password && touched.password ? (
+                <Text className="text-red-500">{errors.password}</Text>
+              ) : null}
 
               <Text className="text-xl text-[#282828] mt-5 mb-5">Ou</Text>
 
@@ -126,7 +161,7 @@ const LoginPage = () => {
               </View>
 
               <TouchableOpacity
-                onPress={handleSubmit}
+                onPress={() => handleSubmit()}
                 className="flex-row justify-center items-center bg-[#8B0000] py-3 rounded-full mt-5 w-4/5"
               >
                 <Text className="text-white text-lg font-bold mr-2">

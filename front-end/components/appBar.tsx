@@ -14,27 +14,30 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("AvisosPage")}
         style={styles.button}
       >
         <View
           style={[
             styles.iconContainer,
-            currentTab === "Notices" && styles.activeIconContainer,
+            currentTab === "AvisosPage" && styles.activeIconContainer,
           ]}
         >
           <Ionicons
             name={
-              currentTab === "Notices"
+              currentTab === "AvisosPage"
                 ? "notifications"
                 : "notifications-outline"
             }
             size={28}
-            color={currentTab === "Notices" ? "#7d0a16" : "white"}
+            color={currentTab === "AvisosPage" ? "#7d0a16" : "white"}
           />
         </View>
         <Text
-          style={[styles.text, currentTab === "Notices" && styles.activeText]}
+          style={[
+            styles.text,
+            currentTab === "AvisosPage" && styles.activeText,
+          ]}
         >
           Avisos
         </Text>
@@ -62,22 +65,27 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("AfterLogin")}
         style={styles.button}
       >
         <View
           style={[
             styles.iconContainer,
-            currentTab === "Home" && styles.activeIconContainer,
+            currentTab === "AfterLogin" && styles.activeIconContainer,
           ]}
         >
           <Ionicons
-            name={currentTab === "Home" ? "home" : "home-outline"}
+            name={currentTab === "AfterLogin" ? "home" : "home-outline"}
             size={28}
-            color={currentTab === "Home" ? "#7d0a16" : "white"}
+            color={currentTab === "AfterLogin" ? "#7d0a16" : "white"}
           />
         </View>
-        <Text style={[styles.text, currentTab === "Home" && styles.activeText]}>
+        <Text
+          style={[
+            styles.text,
+            currentTab === "AfterLogin" && styles.activeText,
+          ]}
+        >
           Home
         </Text>
       </TouchableOpacity>
