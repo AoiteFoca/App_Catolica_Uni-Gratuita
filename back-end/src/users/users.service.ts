@@ -12,6 +12,8 @@ export class UsersService {
   private readonly log = new Logger(UsersService.name);
 
   async createUser(data: CreateUserDto): Promise<any> {
+   //const hashedPassword = await hash(data.password, 10);
+    data.password = await hash(data.password, 10);
     const user = await this.prisma.usuario.create({
       data: {
         login: data.login,
@@ -20,8 +22,7 @@ export class UsersService {
         personId: data.personId,
       },
     });
-
-    return 'Usuário criado com sucesso!';
+    delete user.password;
   }
 
   async exists(login: string): Promise<boolean> {
@@ -29,7 +30,11 @@ export class UsersService {
       where: { login: login },
     });
 
-    return !!userLogin;
+    if(userLogin == null){
+      return false;      
+    }else{
+      return true;
+    }
   }
 
   //Safe search for login
@@ -57,10 +62,10 @@ export class UsersService {
     return users;
   }
 
-  async changePassword(id: any, data: UpdatePasswordDto): Promise<UserNoPass> {
+  async changePassword(login: any, data: UpdatePasswordDto): Promise<UserNoPass> {
     //Catch user by id
-    const user = await this.prisma.usuario.findUnique({
-      where: { id: parseInt(id) },
+    const user = await this.prisma.usuario.findFirst({
+      where: { login: login },
     });
 
     //Check if user exists
@@ -80,7 +85,7 @@ export class UsersService {
         try {
           data.newPassword = await hash(data.newPassword, 10);
           const updateUser = await this.prisma.usuario.update({
-            where: { id: parseInt(id) },
+            where: { login: login },
             data: { password: data.newPassword },
           });
 

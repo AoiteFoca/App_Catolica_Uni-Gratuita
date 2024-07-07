@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Alert, Platform } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from './types/navigationTypes';
-import AppBottomBar from '../components/appBar';
+import { RootStackParamList } from '../types/navigationTypes';
+import AppBottomBar from '../../components/appBar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as FileSystem from 'expo-file-system';
 
@@ -12,9 +13,14 @@ interface Document {
   name: string;
 }
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Document1'>;
+interface CustomImagePickerResult {
+  uri: string;
+  cancelled: boolean;
+}
 
-const Document1: React.FC<Props> = ({ navigation }) => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Document12'>;
+
+const Document12: React.FC<Props> = ({ navigation }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
 
   const pickDocument = async () => {
@@ -22,7 +28,7 @@ const Document1: React.FC<Props> = ({ navigation }) => {
       const result = await DocumentPicker.getDocumentAsync();
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const { uri: originalUri, name } = result.assets[0];
-        const uri = Platform.OS === 'android' ? originalUri : `file://${originalUri}`;
+        const uri = Platform.OS === 'android' ? originalUri : originalUri;
         const limitedName = name.length > 20 ? `${name.substring(0, 20)}...` : name;
         setDocuments(prevDocuments => [...prevDocuments, { uri, name: limitedName }]);
       }
@@ -30,37 +36,37 @@ const Document1: React.FC<Props> = ({ navigation }) => {
       console.error(err);
     }
   };
-  
 
-  const deleteDocument = (index: number) => {
-    setDocuments(prevDocuments => prevDocuments.filter((_, i) => i !== index));
-  };
-
-  const downloadDocument = async (uri: string, name: string) => {
+  const pickImage = async () => {
     try {
-      const fileInfo = await FileSystem.getInfoAsync(uri);
-      if (!fileInfo.exists) {
-        Alert.alert('Erro', `O arquivo não existe: ${name}`);
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      if (permissionResult.granted === false) {
+        Alert.alert('Permissão negada', 'Você precisa conceder permissão para acessar a câmera.');
         return;
       }
   
-      const downloadResumable = FileSystem.createDownloadResumable(
-        uri,
-        `${FileSystem.documentDirectory}${name}`
-      );
+      const pickerResult = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
   
-      const downloadResult = await downloadResumable.downloadAsync();
-  
-      if (downloadResult && downloadResult.uri) {
-        const { uri: fileUri } = downloadResult;
-        Alert.alert('Download', `Arquivo baixado com sucesso: ${name}`);
+      if (!pickerResult.canceled && pickerResult.assets && pickerResult.assets.length > 0) {
+        const { uri } = pickerResult.assets[0];
+        let name = uri.split('/').pop() || 'image.jpg';
+        name = name.length > 20 ? `${name.substring(0, 20)}...` : name;
+        setDocuments(prevDocuments => [...prevDocuments, { uri, name }]);
       } else {
-        Alert.alert('Erro', `Falha ao baixar o arquivo: ${name}`);
+        console.log('Captura de imagem cancelada');
       }
     } catch (err) {
-      console.error('Erro ao baixar o arquivo:', err);
-      Alert.alert('Erro', `Falha ao baixar o arquivo: ${name}`);
+      console.error('Erro ao escolher a imagem:', err);
     }
+  };
+
+  const deleteDocument = (index: number) => {
+    setDocuments(prevDocuments => prevDocuments.filter((_, i) => i !== index));
   };
 
   const showOptions = (index: number) => {
@@ -69,10 +75,6 @@ const Document1: React.FC<Props> = ({ navigation }) => {
       'Opções',
       `O que deseja fazer com ${document.name}?`,
       [
-        {
-          text: 'Download',
-          onPress: () => downloadDocument(document.uri, document.name),
-        },
         {
           text: 'Excluir',
           onPress: () => deleteDocument(index),
@@ -89,8 +91,8 @@ const Document1: React.FC<Props> = ({ navigation }) => {
 
   const renderDocument = ({ item, index }: { item: Document; index: number }) => (
     <View style={styles.document}>
-      <Text numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
       <Image source={{ uri: item.uri }} style={styles.documentImage} />
+      <Text numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
       <TouchableOpacity onPress={() => showOptions(index)}>
         <Icon name="ellipsis-vertical" size={24} color="#7d0a16" />
       </TouchableOpacity>
@@ -101,44 +103,71 @@ const Document1: React.FC<Props> = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Meus Documentos</Text>
       <View style={styles.progressContainer}>
-        <TouchableOpacity onPress={() => {/* Handle back action */}}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
         {[...Array(6)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
-            <View style={[styles.progressStep, index === 0 && styles.activeStep]}>
-              <Text style={[styles.progressText, index === 0 && styles.activeProgressText]}>{index + 1}</Text>
-            </View>
+          <View style={[styles.progressStep, index === 2 && styles.activeStep]}>
+            <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 10}</Text>
           </View>
+        </View>
         ))}
-        <TouchableOpacity onPress={() => {/* Handle next action */}}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document13')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
+
+      <View style={styles.documentationInfo}>
+        <Text style={styles.subtitle}>Comprovante de despesa familiar com doença crônica</Text>
+        <Text style={styles.explanation}>
+            Envie abaixo os documentos que comprovem a doença crônica do membro familiar. Consultar o ícone de ajuda para verificar quais são válidos
+        </Text>
+        <TouchableOpacity
+    style={styles.helpIcon}
+    onPress={() => {
+      Alert.alert('Ajuda', 'Atestado do profissional da área de saúde responsável pelo paciente, constando o CID (Código Internacional de Doenças), ou, se for o caso, cópia do laudo médico legível, atualizado, contendo também o nome do paciente, código da doença (CID), tipo do tratamento, data, carimbo e assinatura do profissional que atesta + receituário legível, indicando a medicação de uso contínuo e/ou encaminhamento de terapias + notas fiscais da compra dos medicamentos prescritos e/ ou recibos de terapias contínuas (Comprovante de compra da medicação dos últimos 30 a 60 dias. Pessoas que possuem tratamento de doença crônica disponibilizado pelo SUS, e consequentemente não possuem gastos particulares, não devem informar no formulário)');
+    }}
+  >
+    <Icon name="help-circle-outline" size={24} color="#7d0a16" />
+  </TouchableOpacity>
+      </View>
+
       <View style={styles.documentContainer}>
-        <Text style={styles.subtitle}>DOCUMENTOS OBRIGATÓRIOS</Text>
+        <Text style={styles.subtitle}>Enviados</Text>
         <FlatList
           data={documents}
           renderItem={renderDocument}
           keyExtractor={(item, index) => index.toString()}
         />
-        <TouchableOpacity style={styles.addButton} onPress={pickDocument}>
+        <TouchableOpacity style={styles.addButton} onPress={() => {
+          Alert.alert(
+            'Escolha uma opção',
+            'Você deseja tirar uma foto ou selecionar um arquivo existente?',
+            [
+              { text: 'Cancelar', style: 'cancel' },
+              { text: 'Selecionar arquivo', onPress: pickDocument },
+              { text: 'Tirar foto', onPress: pickImage },
+            ],
+            { cancelable: true }
+          );
+        }}>
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document11')}>
             <Icon name="chevron-back" size={28} color="#7d0a16" />
             <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document13')}>
             <Text style={styles.buttonText}>Próximo</Text>
             <Icon name="chevron-forward" size={28} color="#7d0a16" />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomBarContainer}>
-        <AppBottomBar currentTab="Document1" />
+        <AppBottomBar currentTab="Document12" />
       </View>
     </View>
   );
@@ -153,7 +182,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 70,
+    marginTop: 50,
     textAlign: 'center',
   },
   progressContainer: {
@@ -165,6 +194,9 @@ const styles = StyleSheet.create({
   },
   progressStepContainer: {
     alignItems: 'center',
+  },
+  activeStepContainer: {
+    position: 'relative',
   },
   progressStep: {
     width: 30,
@@ -193,17 +225,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#7d0a16',
     zIndex: -1,
   },
-  documentContainer: {
-    flex: 1,
-    marginBottom: 50,
-    marginTop: 50, // Move the document list further down
-  },
-  subtitle: {
+  documentationInfo: {
+    marginBottom: 0,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    marginTop: 5,
+    },
+    subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-  },
-  document: {
+    },
+    explanation: {
+    fontSize: 15,
+    marginTop: 5,
+    color: '#333',
+    },
+    helpIcon: {
+        marginLeft: 310,
+    },
+    documentContainer: {
+    flex: 1,
+    marginBottom: 50,
+    marginTop: 20,
+    },
+    document: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -211,50 +263,50 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#f9f9f9',
     borderRadius: 5,
-  },
-  documentImage: {
+    },
+    documentImage: {
     width: 50,
     height: 50,
     borderRadius: 5,
-  },
-  addButton: {
+    },
+    addButton: {
     backgroundColor: 'white',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
     alignItems: 'center',
     marginBottom: 20,
-  },
-  addButtonText: {
+    },
+    addButtonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  buttonContainer: {
+    },
+    buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 100,
-  },
-  button: {
+    marginBottom: 80,
+    },
+    button: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
-  },
-  buttonText: {
+    },
+    buttonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 10,
-  },
-  bottomBarContainer: {
+    },
+    bottomBarContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-  },
-});
-
-export default Document1;
+    },
+    });
+    
+    export default Document12;

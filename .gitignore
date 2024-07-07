@@ -1,2 +1,5 @@
 .vscode
 .vscode/*
+.sql
+.sql/*
+UniGratuita.session.sql
