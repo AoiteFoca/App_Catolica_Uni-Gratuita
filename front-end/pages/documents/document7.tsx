@@ -107,10 +107,10 @@ const Document7: React.FC<Props> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
-        {[...Array(6)].map((_, index) => (
+        {[...Array(5)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
-          <View style={[styles.progressStep, index === 2 && styles.activeStep]}>
-            <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 5}</Text>
+          <View style={[styles.progressStep, index === 1 && styles.activeStep]}>
+            <Text style={[styles.progressText, index === 1 && styles.activeProgressText]}>{index + 6}</Text>
           </View>
         </View>
         ))}
@@ -127,7 +127,7 @@ const Document7: React.FC<Props> = ({ navigation }) => {
         <TouchableOpacity
     style={styles.helpIcon}
     onPress={() => {
-      Alert.alert('Ajuda', 'Texto de ajuda aqui...');
+      Alert.alert('Ajuda', 'Imóvel alugado - No caso de o grupo familiar residir em imóvel alugado, apresentar cópia do contrato de locação. O contrato de aluguel deve estar com as assinaturas reconhecidas em cartório no caso de contrato particular. No caso de contrato com imobiliária, ele deverá estar com todas as assinaturas, inclusive da imobiliária. Tanto os contratos com imobiliária, quanto os contratos particulares, deverão estar vigentes, ou possuir cláusula de renovação automática.\n\nImóvel financiado - No caso de o grupo familiar residir em imóvel financiado, apresentar cópia do registro do imóvel onde um dos membros do grupo familiar que conste no cadastro seja mutuário de financiamento habitacional.\n\nImóvel cedido - No caso de o grupo familiar residir em imóvel cedido gratuitamente, apresentar declaração, com assinatura reconhecida em cartório de quem cede o imóvel, conforme modelo disponível no site da Católica SC + comprovante de residência atualizado referente ao último mês.\n\nImóvel próprio - No caso de o grupo familiar residir em imóvel próprio, apresentar o documento de posse do imóvel (certidão atualizada do imóvel; registro do imóvel; escritura; contrato de compra e venda, processo de usucapião, ou outro documento que comprove que o imóvel pertença a membro do grupo familiar inserido no cadastro) + comprovante de residência atualizado referente ao último mês');
     }}
   >
     <Icon name="help-circle-outline" size={24} color="#7d0a16" />

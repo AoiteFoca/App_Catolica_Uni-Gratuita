@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Alert, Platform } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
@@ -6,22 +7,18 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigationTypes';
 import AppBottomBar from '../../components/appBar';
 import Icon from 'react-native-vector-icons/Ionicons';
-import * as FileSystem from 'expo-file-system';
 
 interface Document {
   uri: string;
   name: string;
 }
 
-interface CustomImagePickerResult {
-  uri: string;
-  cancelled: boolean;
-}
-
 type Props = NativeStackScreenProps<RootStackParamList, 'Document1'>;
 
 const Document1: React.FC<Props> = ({ navigation }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
+  const pessoaId = '{{user.id}}';
+  const categoria = 'inscricao';
 
   const pickDocument = async () => {
     try {
@@ -44,14 +41,14 @@ const Document1: React.FC<Props> = ({ navigation }) => {
         Alert.alert('Permissão negada', 'Você precisa conceder permissão para acessar a câmera.');
         return;
       }
-  
+
       const pickerResult = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
-  
+
       if (!pickerResult.canceled && pickerResult.assets && pickerResult.assets.length > 0) {
         const { uri } = pickerResult.assets[0];
         let name = uri.split('/').pop() || 'image.jpg';
@@ -68,7 +65,6 @@ const Document1: React.FC<Props> = ({ navigation }) => {
   const deleteDocument = (index: number) => {
     setDocuments(prevDocuments => prevDocuments.filter((_, i) => i !== index));
   };
-  
 
   const showOptions = (index: number) => {
     const document = documents[index];
@@ -90,6 +86,38 @@ const Document1: React.FC<Props> = ({ navigation }) => {
     );
   };
 
+  const uploadDocuments = async () => {
+    const formData = new FormData();
+    formData.append('pessoaId', pessoaId);
+    formData.append('categoria', categoria);
+
+    for (const [index, document] of documents.entries()) {
+      const response = await fetch(document.uri);
+      const blob = await response.blob();
+      formData.append(`file${index}`, blob, document.name);
+    }
+
+    try {
+      const response = await axios.post('http://your-backend-url/docs/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        Alert.alert('Sucesso', 'Documentos enviados com sucesso!');
+        console.log('Response:', response.data);
+      } else {
+        Alert.alert('Erro', 'Falha ao enviar documentos.');
+        console.log('Response:', response.data);
+      }
+    } catch (error) {
+      console.error('Erro ao enviar documentos:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao enviar os documentos.');
+      console.log('FormData:', formData);
+    }
+  };
+
   const renderDocument = ({ item, index }: { item: Document; index: number }) => (
     <View style={styles.document}>
       <Image source={{ uri: item.uri }} style={styles.documentImage} />
@@ -108,31 +136,26 @@ const Document1: React.FC<Props> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
-        <View style={[styles.progressStepContainer]}>
-          <View style={[styles.progressStep, styles.activeStep]}>
-            <Text style={[styles.progressText, styles.activeProgressText]}>1</Text>
-          </View>
-        </View>
         {[...Array(5)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
-            <View style={styles.progressStep}>
-              <Text style={styles.progressText}>{index + 2}</Text>
+            <View style={[styles.progressStep, index === 0 && styles.activeStep]}>
+              <Text style={[styles.progressText, index === 0 && styles.activeProgressText]}>{index + 1}</Text>
             </View>
           </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document2')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.documentationInfo}>
-  <View style={styles.subtitleContainer}>
-    <Text style={styles.subtitle}>Comprovante de inscrição/recadastro</Text>
-  </View>
-  <Text style={styles.explanation}>
-    Envie abaixo o comprovante de inscrição ou de recadastro referente ao cadastro preenchido no sistema informatizado do Estado de Santa Catarina
-  </Text>
-</View>
+        <View style={styles.subtitleContainer}>
+          <Text style={styles.subtitle}>Comprovante de inscrição/recadastro</Text>
+        </View>
+        <Text style={styles.explanation}>
+          Envie abaixo o comprovante de inscrição ou de recadastro referente ao cadastro preenchido no sistema informatizado do Estado de Santa Catarina
+        </Text>
+      </View>
       <View style={styles.documentContainer}>
         <Text style={styles.subtitle}>Enviados</Text>
         <FlatList
@@ -153,6 +176,9 @@ const Document1: React.FC<Props> = ({ navigation }) => {
           );
         }}>
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonSend} onPress={uploadDocuments}>
+          <Text style={styles.buttonText}>Enviar Documentos</Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Document2')}>
@@ -269,7 +295,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: 'white',
-        paddingVertical: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
     alignItems: 'center',
@@ -286,6 +312,16 @@ const styles = StyleSheet.create({
     marginBottom: 80,
     paddingHorizontal: 100,
     alignItems: 'center',
+  },
+  buttonSend: {
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    width: '54%',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 50,
+    marginBottom: 10,
+    alignSelf: 'center',
   },
   button: {
     flexDirection: 'row',

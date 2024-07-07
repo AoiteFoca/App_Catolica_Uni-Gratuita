@@ -107,7 +107,7 @@ const Document3: React.FC<Props> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#7d0a16" />
         </TouchableOpacity>
         <View style={styles.progressLine} />
-        {[...Array(6)].map((_, index) => (
+        {[...Array(5)].map((_, index) => (
           <View key={index} style={styles.progressStepContainer}>
           <View style={[styles.progressStep, index === 2 && styles.activeStep]}>
             <Text style={[styles.progressText, index === 2 && styles.activeProgressText]}>{index + 1}</Text>
@@ -275,12 +275,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 50,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     },
     addButtonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
+    },
+    centerButtonContainer: {
+      alignItems: 'center',
+    },
+    saveButton: {
+      backgroundColor: '#2F82ED',
+      paddingVertical: 10, 
+      paddingHorizontal: 15, 
+      alignItems: 'center',
+      borderRadius: 50,
+      marginBottom: 10,
+      width: 100,
+    },
+    saveButtonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: 'bold'
     },
     buttonContainer: {
     flexDirection: 'row',
@@ -294,12 +311,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
+    width: 125,
     },
     buttonText: {
     color: '#7d0a16',
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: 5,
+    },
+    iconBack: {
+      marginLeft: -10,
     },
     bottomBarContainer: {
     position: 'absolute',
