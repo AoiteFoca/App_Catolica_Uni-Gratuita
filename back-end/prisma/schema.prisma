@@ -1,0 +1,264 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model TipoUsuario {
+  id       Int    @id @default(autoincrement()) 
+  userType String  @map("tipoUsuario")
+  
+  usuarios Usuario[]
+}
+
+model Usuario {
+  id         Int     @id @default(autoincrement())
+  login      String  @unique @map("Login")
+  password   String  @map("Senha")
+  userTypeId Int     @map("tipoUsuarioId")
+  personId   Int?    @unique @map("PessoaId")
+  active     Boolean @default(true) @map("Ativo")
+
+  tipoUsuario TipoUsuario @relation(fields: [userTypeId], references: [id])
+  pessoa      Pessoa?     @relation(fields: [personId], references: [id])
+}
+
+model EstadoCivil {
+  id          Int    @id @default(autoincrement()) 
+  estadoCivil String 
+
+  pessoa Pessoa[]
+}
+
+model CorRaca {
+  id      Int    @id @default(autoincrement()) 
+  corRaca String 
+
+  pessoa Pessoa[]
+}
+
+model Sexo {
+  id   Int    @id @default(autoincrement()) 
+  sexo String 
+
+  pessoa Pessoa[]
+}
+
+model Estado {
+  id         Int    @id @default(autoincrement()) 
+  uf         String @unique
+  nomeEstado String 
+
+  cidades    Cidade[]
+}
+
+model Cidade {
+  id         Int    @id @default(autoincrement()) 
+  nomeCidade String 
+  estadoId   Int    
+
+  estado     Estado @relation(fields: [estadoId], references: [id])
+  endereco   Endereco[]
+}
+
+model Endereco {
+  id          Int       @id @default(autoincrement())
+  endereco    String  
+  bairro      String  
+  cep         Int       @map("CEP")
+  cidadeId    Int    
+  numero      String  
+  complemento String?
+  
+  cidade      Cidade    @relation(fields: [cidadeId], references: [id])
+  relacaoPessoaEndereco RelacaoPessoaEndereco[]
+}
+
+model RelacaoPessoaEndereco{
+  pessoaId   Int
+  enderecoId Int
+  
+  pessoa     Pessoa   @relation(fields: [pessoaId], references: [id])
+  enderecos  Endereco @relation(fields: [enderecoId], references: [id])
+
+  @@id([pessoaId,enderecoId])
+}
+
+model GrauParentesco {
+  id   Int    @id @default(autoincrement()) 
+  grau String 
+
+  grupoFamiliares GrupoFamiliar[]
+}
+
+model GrupoFamiliar {
+  id                    Int            @id @default(autoincrement())
+  cpf                   String         @unique 
+  nome                  String         
+  idade                 Int            
+  grauParentescoId      Int            @map("GrauParentescoID")
+  formacao              String          
+  ocupacao              String          
+  grauParentesco        GrauParentesco @relation(fields: [grauParentescoId], references: [id])
+
+  relacaoPessoaFamilias RelacaoPessoaFamilia[]
+}
+
+model RelacaoPessoaFamilia{
+  id              Int            @id @default(autoincrement())
+  pessoaId        Int?
+  grupoFamiliarId Int?
+  
+  pessoa          Pessoa?        @relation(fields: [pessoaId], references: [id])
+  grupoFamiliar   GrupoFamiliar? @relation(fields: [grupoFamiliarId], references: [id])
+
+  @@unique([pessoaId,grupoFamiliarId])
+}
+
+model Modalidade {
+  id         Int    @id
+  modalidade String 
+
+  cursos     Curso[]
+}
+
+model Curso {
+  id           Int    @id
+  nomeCurso    String 
+  numeroFases  Int
+  modalidadeId Int    
+
+  graduacao    Graduacao[]
+  modalidade   Modalidade @relation(fields: [modalidadeId], references: [id])
+}
+
+model Graduacao {
+  matriculaIES            Int      @id
+  instituicao             String 
+  dataIngressoInstituicao DateTime
+  cursoId                 Int    
+  fase                    Int    
+  anoSemestre             Int
+
+  cursos                  Curso  @relation(fields: [cursoId], references: [id])
+  pessoa                  Pessoa[]
+}
+
+model Telefone {
+  id                Int     @id @default(autoincrement())
+  telefone          String? 
+  telefoneComercial String? 
+  celular           String  
+
+  relacaoPessoaTelefone     RelacaoPessoaTelefone[]  
+}
+
+model RelacaoPessoaTelefone {
+  pessoaId   Int
+  telefoneId Int
+  
+  pessoa     Pessoa   @relation(fields: [pessoaId], references: [id])
+  telefone   Telefone @relation(fields: [telefoneId], references: [id])
+
+  @@id([pessoaId,telefoneId])
+}
+
+model Deficiencia {
+  id              Int      @id @default(autoincrement()) 
+  doencaInvalidez String 
+
+  relacaoPessoaDeficiencia RelacaoPessoaDeficiencia[]
+}
+
+model RelacaoPessoaDeficiencia {
+  id            Int         @id @default(autoincrement())
+  pessoaId      Int
+  deficienciaId Int         @unique
+  
+  pessoa        Pessoa      @relation(fields: [pessoaId], references: [id])
+  deficiencias  Deficiencia @relation(fields: [deficienciaId], references: [id])
+
+  @@unique([pessoaId,deficienciaId])
+}
+
+model Despesas {
+  id                  Int     @id @default(autoincrement())
+  despMensalHabitacao Float  
+  despFamTransporte   Float? 
+  despFamDoenca       Float? 
+  despFarEstudo       Float? 
+
+  pessoa              Pessoa?
+}
+
+model Moradia {
+  id     Int    @id
+  tipo   String 
+
+  pessoa Pessoa?
+}
+
+model Documentos {
+  id                  Int    @id @default(autoincrement())
+  pessoaId            Int    @unique
+  inscricao           String?  
+  numPesGrupoFamiliar String?   
+  situacaoCivil       String?  
+  rendaFamiliar       String?  
+  impostoDeRenda      String?  
+  bensFamiliares      String?  
+  tipoMoradia         String?  
+  despesasMoradia     String?  
+  residenciaSC        String?  
+  ensinoMedio         String?
+  despesaTransporte   String? 
+  despesaDoenca       String? 
+  deficiencia         String? 
+  despesaEducacao     String? 
+  adesaoUniGratuita   String?
+
+  pessoa              Pessoa @relation(fields: [pessoaId], references: [id])
+}
+
+model Pessoa {
+  id                     Int                         @id @default(autoincrement())
+  cpf                    String                       @unique
+  rg                     String                       @unique
+  nome                   String                      
+  sobrenome              String                      
+  nomeMae                String                      
+  nomePai                String                      
+  dataNascimento         DateTime 
+  naturalidade           String                      
+  email                  String                      
+  estadoCivilId          Int                         
+  corRacaId              Int                         
+  sexoId                 Int                         
+  ensinoMedio            Boolean
+  possuiGraduacao        Boolean
+  assistPublica          Boolean
+  resideSC               Int
+  rendaFamiliarBruta     Float                     
+  rendaPerCapita         Float                     
+  bensFamilia            Float                     
+  despesasId             Int                         @unique
+  situacaoDesemprego     Boolean
+  graduacaoId            Int
+  tipoMoradiaId          Int                         @unique      
+  
+  enderecos              RelacaoPessoaEndereco[]
+  telefones              RelacaoPessoaTelefone[]
+  estadoCivil            EstadoCivil                 @relation(fields: [estadoCivilId], references: [id])
+  corRaca                CorRaca                     @relation(fields: [corRacaId], references: [id])
+  sexo                   Sexo                        @relation(fields: [sexoId], references: [id])
+  grupoFamilia           RelacaoPessoaFamilia[]
+  despesas               Despesas                    @relation(fields: [despesasId], references: [id])
+  deficiencia            RelacaoPessoaDeficiencia[]
+  graduacao              Graduacao                   @relation(fields: [graduacaoId], references: [matriculaIES])
+  tipoMoradia            Moradia                     @relation(fields: [tipoMoradiaId], references: [id])
+  documentos             Documentos?
+  usuario                Usuario?
+}

@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { Animated, Easing, View } from "react-native";
+import { Animated, Easing, TouchableOpacity, View } from "react-native";
 import { styled } from "tailwindcss-react-native";
 
 type RootStackParamList = {
@@ -9,6 +9,7 @@ type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Loader: undefined;
+  Home: undefined; // Certifique-se de ter "Home" na lista de rotas
 };
 
 interface AnimatedTextProps {
@@ -47,43 +48,45 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
     const animations = animatedValues.map((animatedValue, index) => {
       return Animated.timing(animatedValue, {
         toValue: 1,
-        duration: 100,
-        delay: index * 200,
+        duration: 50, // Reduced duration for faster animation
+        delay: index * 130, // Reduced delay for faster stagger
         useNativeDriver: true,
         easing: Easing.linear,
       });
     });
 
-    Animated.stagger(110, animations).start(() => {
+    Animated.stagger(60, animations).start(() => {
       // Navega para outra página após a conclusão da animação
       handleNavigation();
     });
   }, [text, animatedValues]);
 
   return (
-    <Container className="flex-1 justify-center items-center">
-      <TextContainer className="flex-row flex-wrap justify-center items-center">
-        {letters.map((letter, index) => (
-          <AnimatedTextComponent
-            key={index}
-            className="text-2xl font-bold text-white"
-            style={{
-              opacity: animatedValues[index],
-              transform: [
-                {
-                  translateY: animatedValues[index].interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                  }),
-                },
-              ],
-            }}
-          >
-            {letter}
-          </AnimatedTextComponent>
-        ))}
-      </TextContainer>
-    </Container>
+    <TouchableOpacity onPress={() => navigation.replace("Home")}>
+      <Container className="flex-1 justify-center items-center">
+        <TextContainer className="flex-row flex-wrap justify-center items-center">
+          {letters.map((letter, index) => (
+            <AnimatedTextComponent
+              key={index}
+              className="text-2xl font-bold text-white"
+              style={{
+                opacity: animatedValues[index],
+                transform: [
+                  {
+                    translateY: animatedValues[index].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [20, 0],
+                    }),
+                  },
+                ],
+              }}
+            >
+              {letter}
+            </AnimatedTextComponent>
+          ))}
+        </TextContainer>
+      </Container>
+    </TouchableOpacity>
   );
 };
 
