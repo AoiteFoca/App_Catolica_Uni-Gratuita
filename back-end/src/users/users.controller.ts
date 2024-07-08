@@ -12,10 +12,7 @@ import {
 import { Response } from 'express';
 import { CreateUserDto } from './dtos/create-user-dto';
 import { UpdatePasswordDto } from './dtos/update-pass-dto';
-import { UserNoPass } from './types';
 import { UsersService } from './users.service';
-import { errorMonitor } from 'events';
-import { readFile } from 'fs/promises';
 
 @Controller('users')
 export class UsersController {

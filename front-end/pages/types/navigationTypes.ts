@@ -6,6 +6,8 @@ export type RootStackParamList = {
   Landing: undefined;
   Documents: undefined;
   Profile: undefined;
+  RePassword: undefined;
+  AfterLogin: undefined;
   Document1: undefined;
   Document2: undefined;
   Document3: undefined;
@@ -22,4 +24,5 @@ export type RootStackParamList = {
   Document14: undefined;
   Document15: undefined;
   DocumentFinish: undefined;
+  AvisosPage: undefined;
 };

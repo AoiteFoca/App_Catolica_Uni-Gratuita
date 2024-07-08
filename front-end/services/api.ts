@@ -1,18 +1,24 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { Platform } from "react-native";
 import Toast from "react-native-toast-message";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const baseURL =
   Platform.OS === "android"
     ? "http://192.168.5.101:3000/"
     : "http://192.168.5.101:3000/";
 
-const api = axios.create({
+    interface CustomAxiosInstance extends AxiosInstance {
+      saveItem: (key: string, value: string) => Promise<void>;
+      getItem: (key: string) => Promise<any>;
+    }
+    
+const api: CustomAxiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },
-});
+}) as CustomAxiosInstance;
 
 api.interceptors.response.use(
   (response) => {
@@ -31,8 +37,29 @@ api.interceptors.response.use(
       text1: "Erro",
       text2: error.response?.data?.message || "Algo deu errado!",
     });
-    return Promise.reject(error);
+    return error;
   }
 );
+
+//#region Cache
+api.saveItem = async (key: string, value: string) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    console.error("Erro ao salvar dados!", error);
+  }
+};
+
+api.getItem = async (key: string): Promise<any> => {
+  try {
+    const value = await AsyncStorage.getItem(key) as string;
+    const parsedValue = await JSON.parse(value);
+    return parsedValue;
+  } catch (error) {
+    console.error("Erro ao pegar os dados!", error);
+    return null;
+  }
+};
+//#endregion
 
 export default api;
