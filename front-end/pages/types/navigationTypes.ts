@@ -25,4 +25,5 @@ export type RootStackParamList = {
   Document15: undefined;
   DocumentFinish: undefined;
   AvisosPage: undefined;
+  UserInfos: undefined;
 };

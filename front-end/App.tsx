@@ -29,6 +29,7 @@ import LoginPage from "./pages/login";
 import RePassword from "./pages/password";
 import Profile from "./pages/profile";
 import RegisterPage from "./pages/register";
+import UserInfos from "./pages/userInfos";
 import { RootStackParamList } from "./pages/types/navigationTypes";
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -167,6 +168,11 @@ const App: React.FC = () => {
           <Stack.Screen
             name="AvisosPage"
             component={Avisos}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="UserInfos"
+            component={UserInfos}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

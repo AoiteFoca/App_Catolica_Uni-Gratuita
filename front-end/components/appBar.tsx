@@ -112,27 +112,27 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Document1")}
+        onPress={() => navigation.navigate("UserInfos")}
         style={styles.button}
       >
         <View
           style={[
             styles.iconContainer,
-            currentTab === "Document1" && styles.activeIconContainer,
+            currentTab === "UserInfos" && styles.activeIconContainer,
           ]}
         >
           <Ionicons
             name={
-              currentTab === "Document1"
+              currentTab === "UserInfos"
                 ? "ellipsis-horizontal"
                 : "ellipsis-horizontal-outline"
             }
             size={28}
-            color={currentTab === "Document1" ? "#7d0a16" : "white"}
+            color={currentTab === "UserInfos" ? "#7d0a16" : "white"}
           />
         </View>
         <Text
-          style={[styles.text, currentTab === "Document1" && styles.activeText]}
+          style={[styles.text, currentTab === "UserInfos" && styles.activeText]}
         >
           Outros
         </Text>

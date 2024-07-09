@@ -21,6 +21,7 @@ interface StyledInputProps {
   error?: string;
   touched?: boolean;
   secureTextEntry?: boolean;
+  format?: (value: string) => string; // Nova propriedade para formatação
 }
 
 const StyledInput: React.FC<StyledInputProps> = ({
@@ -34,11 +35,17 @@ const StyledInput: React.FC<StyledInputProps> = ({
   error,
   touched,
   secureTextEntry = false,
+  format, // Propriedade de formatação adicionada
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  // Função para aplicar a formatação, se existir
+  const applyFormat = (text: string) => {
+    return format ? format(text) : text;
   };
 
   return (
@@ -49,7 +56,7 @@ const StyledInput: React.FC<StyledInputProps> = ({
         style={styles.input}
         placeholder={placeholder}
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={(text) => onChangeText(applyFormat(text))}
         onFocus={onFocus}
         onBlur={onBlur}
         keyboardType={keyboardType}
