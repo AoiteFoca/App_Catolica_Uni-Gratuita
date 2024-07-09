@@ -62,9 +62,9 @@ const UserInfosPage = () => {
     bairro: Yup.string().required("Bairro é obrigatório"),
     municipio: Yup.string().required("Município é obrigatório"),
     email: Yup.string().email("Email inválido").required("Email é obrigatório"),
-    estadoCivilId: Yup.string().required("Estado civil é obrigatório"),
-    corRacaId: Yup.string().required("Cor/Raça é obrigatória"),
-    sexoId: Yup.string().required("Sexo é obrigatório"),
+    estadoCivil: Yup.string().required("Estado civil é obrigatório"),
+    corRaca: Yup.string().required("Cor/Raça é obrigatória"),
+    sexo: Yup.string().required("Sexo é obrigatório"),
     ensinoMedio: Yup.boolean().required("Ensino médio é obrigatório"),
     possuiGraduacao: Yup.boolean().required("Possui graduação é obrigatório"),
     assistPublica: Yup.boolean().required("Assistência pública é obrigatória"),
@@ -143,9 +143,9 @@ const UserInfosPage = () => {
           celular: "",
           resideSC: "",
           email: "",
-          estadoCivilId: "",
-          corRacaId: "",
-          sexoId: "",
+          estadoCivil: "",
+          corRaca: "",
+          sexo: "",
           ensinoMedio: false,
           possuiGraduacao: false,
           assistPublica: false,
@@ -158,7 +158,7 @@ const UserInfosPage = () => {
           despesaEducacao: 0,
           situacaoDesemprego: false,
           deficiencia: false,
-          instituicaoId: "",
+          instituicao: "",
           dataIngresso: "",
           curso: "",
           anoSemestre: "",
@@ -360,43 +360,43 @@ const UserInfosPage = () => {
             <View style={styles.dropdownContainer}>
               <Text style={styles.dropdownLabel}>Estado Civil</Text>
               <Picker
-                selectedValue={values.estadoCivilId}
-                onValueChange={(itemValue) => setFieldValue("estadoCivilId", itemValue)}
+                selectedValue={values.estadoCivil}
+                onValueChange={(itemValue) => setFieldValue("estadoCivil", itemValue)}
               >
                 {stateOptions.estadoCivil.map((option: any) => (
                   <Picker.Item key={option.id} label={option.nome} value={option.id} />
                 ))}
               </Picker>
-              {touched.estadoCivilId && errors.estadoCivilId && (
-                <Text style={styles.errorText}>{errors.estadoCivilId}</Text>
+              {touched.estadoCivil && errors.estadoCivil && (
+                <Text style={styles.errorText}>{errors.estadoCivil}</Text>
               )}
             </View>
             <View style={styles.dropdownContainer}>
               <Text style={styles.dropdownLabel}>Cor/Raça</Text>
               <Picker
-                selectedValue={values.corRacaId}
-                onValueChange={(itemValue) => setFieldValue("corRacaId", itemValue)}
+                selectedValue={values.corRaca}
+                onValueChange={(itemValue) => setFieldValue("corRaca", itemValue)}
               >
                 {stateOptions.corRaca.map((option: any) => (
                   <Picker.Item key={option.id} label={option.nome} value={option.id} />
                 ))}
               </Picker>
-              {touched.corRacaId && errors.corRacaId && (
-                <Text style={styles.errorText}>{errors.corRacaId}</Text>
+              {touched.corRaca && errors.corRaca && (
+                <Text style={styles.errorText}>{errors.corRaca}</Text>
               )}
             </View>
             <View style={styles.dropdownContainer}>
               <Text style={styles.dropdownLabel}>Sexo</Text>
               <Picker
-                selectedValue={values.sexoId}
-                onValueChange={(itemValue) => setFieldValue("sexoId", itemValue)}
+                selectedValue={values.sexo}
+                onValueChange={(itemValue) => setFieldValue("sexo", itemValue)}
               >
                 {stateOptions.sexo.map((option: any) => (
                   <Picker.Item key={option.id} label={option.nome} value={option.id} />
                 ))}
               </Picker>
-              {touched.sexoId && errors.sexoId && (
-                <Text style={styles.errorText}>{errors.sexoId}</Text>
+              {touched.sexo && errors.sexo && (
+                <Text style={styles.errorText}>{errors.sexo}</Text>
               )}
             </View>
             <View style={styles.questionContainer}>
