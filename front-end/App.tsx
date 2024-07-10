@@ -30,6 +30,7 @@ import RePassword from "./pages/password";
 import Profile from "./pages/profile";
 import RegisterPage from "./pages/register";
 import { RootStackParamList } from "./pages/types/navigationTypes";
+import ChangeRegistration from "./pages/changeRegistration";
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -167,6 +168,11 @@ const App: React.FC = () => {
           <Stack.Screen
             name="AvisosPage"
             component={Avisos}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ChangeRegistration"
+            component={ChangeRegistration}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
