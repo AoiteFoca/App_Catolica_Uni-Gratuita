@@ -17,8 +17,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Document1'>;
 
 const Document1: React.FC<Props> = ({ navigation }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const pessoaId = '{{user.id}}';
-  const categoria = 'inscricao';
+  const personId = '{{user.id}}';
+  const category = 'inscricao';
 
   const pickDocument = async () => {
     try {
@@ -88,8 +88,8 @@ const Document1: React.FC<Props> = ({ navigation }) => {
 
   const uploadDocuments = async () => {
     const formData = new FormData();
-    formData.append('pessoaId', pessoaId);
-    formData.append('categoria', categoria);
+    formData.append('personId', personId);
+    formData.append('category', category);
 
     for (const [index, document] of documents.entries()) {
       const response = await fetch(document.uri);

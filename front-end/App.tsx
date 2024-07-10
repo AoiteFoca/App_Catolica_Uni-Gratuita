@@ -1,7 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
+import React, { useEffect } from "react";
+import { AppState } from 'react-native';
 import Toast from "react-native-toast-message";
 import { TailwindProvider } from "tailwindcss-react-native";
 import AfterLogin from "./pages/afterLogin";
@@ -29,13 +30,38 @@ import LoginPage from "./pages/login";
 import RePassword from "./pages/password";
 import Profile from "./pages/profile";
 import RegisterPage from "./pages/register";
-import UserInfos from "./pages/userInfos";
 import { RootStackParamList } from "./pages/types/navigationTypes";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "./services/api";
+import UserInfos from "./pages/userInfos";
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const App: React.FC = () => {
+  useEffect(() => {
+    const teste = setTimeout(AsyncStorage.clear, 10000);
+
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      clearTimeout(teste);
+      clearCache();
+      handleAppStateChange("inactive");
+    }
+  })
+
+  const clearCache = async () => {
+    AsyncStorage.clear();
+    console.log(await api.getItem("token"));
+  };
+
+  const handleAppStateChange = (nextAppState: string) => {
+    if (nextAppState === 'inactive' || nextAppState === 'background') {
+      clearCache(); // Também limpa o cache quando o aplicativo vai para o fundo
+    }
+  };
+
   return (
     <TailwindProvider>
       <NavigationContainer>

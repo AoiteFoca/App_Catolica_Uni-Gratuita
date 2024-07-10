@@ -38,9 +38,15 @@ const LoginPage = () => {
   };
 
   const loginFunction = (values: any) => {
-    console.log(values);
     loginUser(values).then((response) => {
-      navigation.navigate("AfterLogin");
+      if(response){
+        try{
+          navigation.navigate("AfterLogin");
+        }catch(error){
+          console.error("Erro:", error);
+          throw error;
+        }
+      }
     });
   };
 
