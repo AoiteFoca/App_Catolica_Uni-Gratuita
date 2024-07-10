@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, Logger } from '@nestjs/common';
 import { Usuario } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
@@ -12,6 +13,7 @@ export class UsersService {
   private readonly log = new Logger(UsersService.name);
 
   async createUser(data: CreateUserDto): Promise<any> {
+    console.log(data)
     //const hashedPassword = await hash(data.password, 10);
     data.password = await hash(data.password, 10);
     const user = await this.prisma.usuario.create({
@@ -69,7 +71,7 @@ export class UsersService {
     return user;
   }
 
-  async checkPassword(senha: string): Promise<Boolean> {
+  async checkPassword(senha: string): Promise<any> {
     const user = await this.prisma.usuario.findFirst({
       where: { id: 1 },
     });
