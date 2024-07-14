@@ -45,6 +45,8 @@ export class AuthService {
     throw new Error('Usuário ou senha inválidos!');
   }
 
+  //#region RedisCache
+
   //Storage user data in cache
   async cacheUserData(user: User, token: any){
     if(!redisClient.isOpen){
@@ -76,4 +78,5 @@ export class AuthService {
 
     return userData ? JSON.parse(userData) : null;
   }
+  //#endregion
 }

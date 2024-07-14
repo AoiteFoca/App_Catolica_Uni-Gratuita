@@ -39,25 +39,25 @@ const Tab = createBottomTabNavigator();
 
 const App: React.FC = () => {
   useEffect(() => {
-    const teste = setTimeout(AsyncStorage.clear, 10000);
-
-    AppState.addEventListener('change', handleAppStateChange);
+    const cacheTimeout = setTimeout(AsyncStorage.clear, 1800000);
+    const state = AppState.addEventListener('change', handleAppStateChange);
 
     return () => {
-      clearTimeout(teste);
-      clearCache();
-      handleAppStateChange("inactive");
+      clearTimeout(cacheTimeout);
+      //clearCache();
+      state.remove();
     }
   })
 
   const clearCache = async () => {
-    AsyncStorage.clear();
-    console.log(await api.getItem("token"));
+    await AsyncStorage.clear();
   };
 
   const handleAppStateChange = (nextAppState: string) => {
-    if (nextAppState === 'inactive' || nextAppState === 'background') {
-      clearCache(); // Também limpa o cache quando o aplicativo vai para o fundo
+    if (nextAppState === 'background') {
+      setTimeout(clearCache, 1800000);
+    }else if(nextAppState === 'inactive'){
+      setTimeout(clearCache, 1800000);
     }
   };
 

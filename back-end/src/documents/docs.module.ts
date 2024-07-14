@@ -4,6 +4,7 @@ import { DocsController } from './docs.controller';
 import { DatabaseModule } from '../database/database.module';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [DatabaseModule, UsersModule],

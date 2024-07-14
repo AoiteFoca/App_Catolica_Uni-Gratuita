@@ -8,11 +8,13 @@ import {
   Post,
   Res,
   UploadedFile,
+  UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Express, Response } from 'express';
+import { Response } from 'express';
 import { DocsService } from './docs.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 
 @Controller('docs')
@@ -22,26 +24,31 @@ export class DocsController {
 
   @Post('upload')
   @UseInterceptors(
-    FileInterceptor('file', {
+    FilesInterceptor('files', 20,{
       storage: memoryStorage(), // Usando armazenamento em memória
     }),
   )
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() data: any,
     @Res() res: Response
   ): Promise<any> {
     try {
-      const result = await this.docs.saveFile(file,data);
+      const filesReceived = [];
+      console.log(files)
+      for(const file of files){
+        const result = await this.docs.saveFile(file,data);
+        filesReceived.push(result);
+      }
       return res.status(HttpStatus.CREATED).json({
         success: true,
         message: 'Arquivo salvo com sucesso!',
-        data: result,
+        data: filesReceived,
       });
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
-        message: `Erro ao salvar arquivo "${file.originalname}"!`,
+        message: `Erro ao salvar arquivos!`,
         error: error.message,
       });
     }
@@ -53,6 +60,7 @@ export class DocsController {
     @Res() res: Response
   ): Promise<any> {
     try {
+      console.log("docs")
       const result = await this.docs.deleteFile(data);
       return res.status(HttpStatus.OK).json({
         success: true,

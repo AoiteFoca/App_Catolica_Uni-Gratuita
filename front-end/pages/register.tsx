@@ -41,11 +41,30 @@ const RegisterPage = () => {
     ),
   });
 
-  const handleAfterLogin = (values: any) => {
+  const handleAfterLogin = async (values: any) => {
     values["login"] = values.email;
     values["userTypeId"] = 1;
-    registerUser(values).then((res) => console.log(res));
-    // navigation.navigate("AfterLogin");
+    try{
+      const response = await registerUser(values).then((response) => {
+        if (typeof response === 'string') {
+          try {
+            const result = JSON.parse(response);
+            return result;
+          } catch (parseError) {
+            console.error("Erro ao analisar JSON:", parseError);
+            return response;
+          }
+        } else {
+          return response;
+        }
+      })
+
+      if(response.success){
+        navigation.navigate("AfterLogin");
+      }
+    }catch(error){
+      console.error("Erro na conexão!:", error);
+    }
   };
 
   const handleGoBack = () => {

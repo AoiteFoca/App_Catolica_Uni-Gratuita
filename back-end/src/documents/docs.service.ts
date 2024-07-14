@@ -11,6 +11,9 @@ export class DocsService {
     private readonly log = new Logger(UsersService.name);
 
     async saveFile(file: Express.Multer.File, data: any): Promise<any> {
+        console.log(`${file}-1-back`)
+    }
+    /*async saveFile(file: Express.Multer.File, data: any): Promise<any> {
         try{
             //#region Variables/Utils
             //Creates the file path and name
@@ -61,7 +64,8 @@ export class DocsService {
             this.log.log(`Erro ao salvar arquivo "${error}"!`);
             throw new Error(error);
         }
-    }
+        return null;
+    }*/
 
     async deleteFile(data: any): Promise<any>{
         const dirPath = join(`src/documents/files/pessoa${data.personId}/${data.category}/`);

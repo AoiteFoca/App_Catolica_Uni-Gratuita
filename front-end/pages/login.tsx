@@ -41,7 +41,7 @@ const LoginPage = () => {
     loginUser(values).then((response) => {
       if(response){
         try{
-          //navigation.navigate("AfterLogin");
+          navigation.navigate("AfterLogin");
         }catch(error){
           console.error("Erro:", error);
           throw error;

@@ -8,16 +8,19 @@ import {
   Post,
   Request,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateUserDto } from './dtos/create-user-dto';
 import { UpdatePasswordDto } from './dtos/update-pass-dto';
 import { UsersService } from './users.service';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private prisma: UsersService) {}
 
+  @IsPublic()
   @Post('register')
   async createUser(
     @Body() data: CreateUserDto,
@@ -39,6 +42,7 @@ export class UsersController {
     }
   }
 
+  @IsPublic()
   @Get('exists/:login')
   async exists(
     @Param('login') login: string,
@@ -46,11 +50,19 @@ export class UsersController {
   ): Promise<any> {
     try {
       const result = await this.prisma.exists(login);
-      return res.status(HttpStatus.OK).json({
-        success: true,
-        message: 'Usuário já cadastrado!',
-        data: result,
-      });
+      if(result === false){
+        return res.status(HttpStatus.OK).json({
+          success: true,
+          message: 'Usuário não cadastrado!',
+          data: result,
+        });
+      }else{
+        return res.status(HttpStatus.CONFLICT).json({
+          success: false,
+          message: 'Usuário já cadastrado!',
+          data: result,
+        });
+      }
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
