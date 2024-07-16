@@ -14,53 +14,30 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("AvisosPage")}
         style={styles.button}
       >
         <View
           style={[
             styles.iconContainer,
-            currentTab === "Home" && styles.activeIconContainer,
+            currentTab === "AvisosPage" && styles.activeIconContainer,
           ]}
         >
           <Ionicons
             name={
-              currentTab === "Home"
-                ? "home"
-                : "home-outline"
-            }
-            size={28}
-            color={currentTab === "Home" ? "#7d0a16" : "white"}
-          />
-        </View>
-        <Text
-          style={[styles.text, currentTab === "Home" && styles.activeText]}
-        >
-          Home
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
-        style={styles.button}
-      >
-        <View
-          style={[
-            styles.iconContainer,
-            currentTab === "Notices" && styles.activeIconContainer,
-          ]}
-        >
-          <Ionicons
-            name={
-              currentTab === "Notices"
+              currentTab === "AvisosPage"
                 ? "notifications"
                 : "notifications-outline"
             }
             size={28}
-            color={currentTab === "Notices" ? "#7d0a16" : "white"}
+            color={currentTab === "AvisosPage" ? "#7d0a16" : "white"}
           />
         </View>
         <Text
-          style={[styles.text, currentTab === "Notices" && styles.activeText]}
+          style={[
+            styles.text,
+            currentTab === "AvisosPage" && styles.activeText,
+          ]}
         >
           Avisos
         </Text>
@@ -88,30 +65,74 @@ const AppBottomBar: React.FC<AppBottomBarProps> = ({ currentTab }) => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Document1")}
+        onPress={() => navigation.navigate("AfterLogin")}
         style={styles.button}
       >
         <View
           style={[
             styles.iconContainer,
-            currentTab === "Document1" && styles.activeIconContainer,
+            currentTab === "AfterLogin" && styles.activeIconContainer,
           ]}
         >
           <Ionicons
-            name={
-              currentTab === "Document1"
-                ? "ellipsis-horizontal"
-                : "ellipsis-horizontal-outline"
-            }
+            name={currentTab === "AfterLogin" ? "home" : "home-outline"}
             size={28}
-            color={currentTab === "Document1" ? "#7d0a16" : "white"}
+            color={currentTab === "AfterLogin" ? "#7d0a16" : "white"}
           />
         </View>
         <Text
           style={[
             styles.text,
-            currentTab === "Document1" && styles.activeText,
+            currentTab === "AfterLogin" && styles.activeText,
           ]}
+        >
+          Home
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Profile")}
+        style={styles.button}
+      >
+        <View
+          style={[
+            styles.iconContainer,
+            currentTab === "Profile" && styles.activeIconContainer,
+          ]}
+        >
+          <Ionicons
+            name={currentTab === "Profile" ? "person" : "person-outline"}
+            size={28}
+            color={currentTab === "Profile" ? "#7d0a16" : "white"}
+          />
+        </View>
+        <Text
+          style={[styles.text, currentTab === "Profile" && styles.activeText]}
+        >
+          Perfil
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("UserInfos")}
+        style={styles.button}
+      >
+        <View
+          style={[
+            styles.iconContainer,
+            currentTab === "UserInfos" && styles.activeIconContainer,
+          ]}
+        >
+          <Ionicons
+            name={
+              currentTab === "UserInfos"
+                ? "ellipsis-horizontal"
+                : "ellipsis-horizontal-outline"
+            }
+            size={28}
+            color={currentTab === "UserInfos" ? "#7d0a16" : "white"}
+          />
+        </View>
+        <Text
+          style={[styles.text, currentTab === "UserInfos" && styles.activeText]}
         >
           Outros
         </Text>
@@ -128,8 +149,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     backgroundColor: "#7d0a16",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderWidth: 1,
+    borderTopColor: "#FFFFFF",
     height: 110,
   },
   button: {

@@ -16,7 +16,7 @@ const DocumentFinish: React.FC<Props> = ({ navigation }) => {
       </Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Landing')}
+        onPress={() => navigation.navigate('AfterLogin')}
       >
         <Text style={styles.buttonText}>Voltar para a Página Inicial</Text>
         <Icon name="home-outline" size={24} color="#7d0a16" />

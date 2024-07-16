@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, Logger } from '@nestjs/common';
 import { Usuario } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
@@ -12,7 +13,8 @@ export class UsersService {
   private readonly log = new Logger(UsersService.name);
 
   async createUser(data: CreateUserDto): Promise<any> {
-   //const hashedPassword = await hash(data.password, 10);
+    console.log(data)
+    //const hashedPassword = await hash(data.password, 10);
     data.password = await hash(data.password, 10);
     const user = await this.prisma.usuario.create({
       data: {
@@ -30,9 +32,9 @@ export class UsersService {
       where: { login: login },
     });
 
-    if(userLogin == null){
-      return false;      
-    }else{
+    if (userLogin == null) {
+      return false;
+    } else {
       return true;
     }
   }
@@ -52,7 +54,24 @@ export class UsersService {
     return user;
   }
 
-  async checkPassword(senha: string): Promise<Boolean> {
+  async login(login: string, password: string): Promise<UserNoPass> {
+    const user = await this.findByLogin(login);
+
+    if (!user) {
+      throw new Error('Usuário não encontrado!');
+    }
+
+    const passwordMatch = await compare(password, user.password);
+
+    if (!passwordMatch) {
+      throw new Error('Senha incorreta!');
+    }
+
+    delete user.password;
+    return user;
+  }
+
+  async checkPassword(senha: string): Promise<any> {
     const user = await this.prisma.usuario.findFirst({
       where: { id: 1 },
     });
@@ -62,7 +81,10 @@ export class UsersService {
     return users;
   }
 
-  async changePassword(login: any, data: UpdatePasswordDto): Promise<UserNoPass> {
+  async changePassword(
+    login: any,
+    data: UpdatePasswordDto,
+  ): Promise<UserNoPass> {
     //Catch user by id
     const user = await this.prisma.usuario.findFirst({
       where: { login: login },

@@ -8,7 +8,7 @@ interface LoaderPageProps {
 }
 
 const LoaderPage: React.FC<LoaderPageProps> = ({
-  text = "UNIVERSIDADE GRATUITA",
+  text = " UNIVERSIDADE GRATUITA ",
   page = "Home",
 }: any) => {
   return (

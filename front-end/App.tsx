@@ -33,6 +33,7 @@ import RegisterPage from "./pages/register";
 import { RootStackParamList } from "./pages/types/navigationTypes";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "./services/api";
+import UserInfos from "./pages/userInfos";
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -171,6 +172,11 @@ const App: React.FC = () => {
           <Stack.Screen
             name="AvisosPage"
             component={Avisos}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="UserInfos"
+            component={UserInfos}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

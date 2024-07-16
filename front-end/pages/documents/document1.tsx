@@ -173,7 +173,7 @@ const Document1: React.FC<Props> = ({ navigation }) => {
             </View>
           </View>
         ))}
-        <TouchableOpacity onPress={() => navigation.navigate('Document3')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Document2')}>
           <Icon name="chevron-forward" size={28} color="#7d0a16" />
         </TouchableOpacity>
       </View>
