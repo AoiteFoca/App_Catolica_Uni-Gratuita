@@ -14,14 +14,16 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { DocsService } from './docs.service';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('docs')
 export class DocsController {
   constructor(private readonly docs: DocsService) {}
   private readonly log = new Logger(DocsService.name);
 
+  @IsPublic()
   @Post('upload')
   @UseInterceptors(
     FilesInterceptor('files', 20,{
@@ -35,7 +37,6 @@ export class DocsController {
   ): Promise<any> {
     try {
       const filesReceived = [];
-      console.log(files)
       for(const file of files){
         const result = await this.docs.saveFile(file,data);
         filesReceived.push(result);

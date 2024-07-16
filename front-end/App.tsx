@@ -38,28 +38,6 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const App: React.FC = () => {
-  useEffect(() => {
-    const cacheTimeout = setTimeout(AsyncStorage.clear, 1800000);
-    const state = AppState.addEventListener('change', handleAppStateChange);
-
-    return () => {
-      clearTimeout(cacheTimeout);
-      //clearCache();
-      state.remove();
-    }
-  })
-
-  const clearCache = async () => {
-    await AsyncStorage.clear();
-  };
-
-  const handleAppStateChange = (nextAppState: string) => {
-    if (nextAppState === 'background') {
-      setTimeout(clearCache, 1800000);
-    }else if(nextAppState === 'inactive'){
-      setTimeout(clearCache, 1800000);
-    }
-  };
 
   return (
     <TailwindProvider>

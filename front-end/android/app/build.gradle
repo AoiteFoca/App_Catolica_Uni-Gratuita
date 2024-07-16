@@ -83,7 +83,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.myapp2"
+    namespace 'uniGratuita.app'
     defaultConfig {
         applicationId 'uniGratuita.app'
         minSdkVersion rootProject.ext.minSdkVersion

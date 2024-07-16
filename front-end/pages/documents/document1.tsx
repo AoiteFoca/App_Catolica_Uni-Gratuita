@@ -8,10 +8,12 @@ import { RootStackParamList } from '../types/navigationTypes';
 import AppBottomBar from '../../components/appBar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import api from '../../services/api';
+import FormData from 'form-data';
 
 interface Document {
   uri: string;
   name: string;
+  type?: string;
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Document1'>;
@@ -23,12 +25,15 @@ const Document1: React.FC<Props> = ({ navigation }) => {
 
   const pickDocument = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync();
+      const cache = await api.getItem("token") || "";
+      const result = await DocumentPicker.getDocumentAsync({});
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        const { uri: originalUri, name, file } = result.assets[0];
+        const { uri: originalUri, name, mimeType } = result.assets[0];
         const uri = Platform.OS === 'android' ? originalUri : originalUri;
+        const type = mimeType || 'application/pdf';
         const limitedName = name.length > 20 ? `${name.substring(0, 20)}...` : name;
-        setDocuments(prevDocuments => [...prevDocuments, { uri, name: limitedName }]);
+        setDocuments(prevDocuments => [...prevDocuments, { uri, type, name: limitedName }]);
+        await api.saveItem('token', cache);
       }
     } catch (err) {
       console.error(err);
@@ -87,31 +92,47 @@ const Document1: React.FC<Props> = ({ navigation }) => {
     );
   };
 
- const uploadDocuments = async () => {
+  const uploadDocuments = async () => {
+    const formData = new FormData();
+    const data = await api.getItem("token");
+    //formData.append('files', documents[0]);
+    personId = data.personId;
+    category = 'numPesGrupoFamiliar';
+  
+    formData.append('personId', personId);
+    formData.append('category', category);
+
+  for (const document in documents) {
+    formData.append('files', documents[document]);
+  }
+    
+    await api.post('/docs/upload/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+  }
+
+ /*const uploadDocuments = async () => {
   const formData = new FormData();
   const data = await api.getItem("token");
+  console.log(data.login);
+
   personId = data.personId;
   category = 'numPesGrupoFamiliar';  // Ajuste conforme a necessidade
 
   formData.append('personId', personId);
   formData.append('category', category);
 
-  for (const [index, document] of documents.entries()) {
-    try {
-      const response = await fetch(document.uri);
-      const blob = await response.blob();
-      formData.append(`files`, blob, document.name);
-    } catch (error) {
-      console.error(`Erro ao adicionar documento ${document.name}:`, error);
-    }
+  for (const document in documents) {
+    formData.append('files', documents[document]);
   }
 
   try {
-    console.log(formData);
+    console.log(formData)
     const response = await api.post('/docs/upload/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${data.token}`,
       },
     });
   
@@ -124,7 +145,7 @@ const Document1: React.FC<Props> = ({ navigation }) => {
       console.error('Erro ao enviar documentos:', error);
       Alert.alert('Erro', 'Ocorreu um erro ao enviar os documentos.');
     }
-  };
+  };*/
   
 
   const renderDocument = ({ item, index }: { item: Document; index: number }) => (

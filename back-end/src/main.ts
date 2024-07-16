@@ -10,7 +10,7 @@ async function bootstrap() {
     cert: fs.readFileSync('./src/auth/secrets/certificate.crt'),
   };*/
   const app = await NestFactory.create(AppModule, {
-    /*httpsOptions,*/ snapshot: true,
+    /*httpsOptions,*/ snapshot: true, cors: true
   });
     // Pipes
     app.useGlobalPipes(
@@ -20,12 +20,6 @@ async function bootstrap() {
         forbidNonWhitelisted: true,
       }),
     );
-
-    app.enableCors({
-      methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-      allowedHeaders: 'Content-Type,Authorization',
-      credentials: true,
-    });
 
   //Starts listening for shutdown hook
   app.enableShutdownHooks();

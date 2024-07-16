@@ -15,9 +15,6 @@ const baseURL =
     
 const api: CustomAxiosInstance = axios.create({
   baseURL: baseURL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 }) as CustomAxiosInstance;
 
 api.interceptors.response.use(
