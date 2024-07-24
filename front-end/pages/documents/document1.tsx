@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Alert, Platform } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
@@ -8,7 +7,7 @@ import { RootStackParamList } from '../types/navigationTypes';
 import AppBottomBar from '../../components/appBar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import api from '../../services/api';
-import FormData from 'form-data';
+import uploadDocuments from '../../services/uploadDocuments';
 
 interface Document {
   uri: string;
@@ -92,61 +91,12 @@ const Document1: React.FC<Props> = ({ navigation }) => {
     );
   };
 
-  const uploadDocuments = async () => {
-    const formData = new FormData();
+  const handleUploadDocuments = async () => {
     const data = await api.getItem("token");
-    //formData.append('files', documents[0]);
     personId = data.personId;
-    category = 'numPesGrupoFamiliar';
-  
-    formData.append('personId', personId);
-    formData.append('category', category);
-
-  for (const document in documents) {
-    formData.append('files', documents[document]);
-  }
-    
-    await api.post('/docs/upload/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-  }
-
- /*const uploadDocuments = async () => {
-  const formData = new FormData();
-  const data = await api.getItem("token");
-  console.log(data.login);
-
-  personId = data.personId;
-  category = 'numPesGrupoFamiliar';  // Ajuste conforme a necessidade
-
-  formData.append('personId', personId);
-  formData.append('category', category);
-
-  for (const document in documents) {
-    formData.append('files', documents[document]);
-  }
-
-  try {
-    console.log(formData)
-    const response = await api.post('/docs/upload/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  
-      if (response.status === 201) {
-        Alert.alert('Sucesso', 'Documentos enviados com sucesso!');
-      } else {
-        Alert.alert('Erro', 'Falha ao enviar documentos.');
-      }
-    } catch (error) {
-      console.error('Erro ao enviar documentos:', error);
-      Alert.alert('Erro', 'Ocorreu um erro ao enviar os documentos.');
-    }
-  };*/
-  
+    category = 'inscricao';
+    await uploadDocuments(personId, category, documents);
+  };
 
   const renderDocument = ({ item, index }: { item: Document; index: number }) => (
     <View style={styles.document}>
@@ -207,7 +157,7 @@ const Document1: React.FC<Props> = ({ navigation }) => {
         }}>
           <Text style={styles.addButtonText}>+ Adicionar novo arquivo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonSend} onPress={uploadDocuments}>
+        <TouchableOpacity style={styles.buttonSend} onPress={handleUploadDocuments}>
           <Text style={styles.buttonText}>Enviar Documentos</Text>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>

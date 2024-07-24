@@ -5,8 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const baseURL =
   Platform.OS === "android"
-    ? "http://10.197.10.235:3000/"
-    : "http://10.197.10.235:3000/";
+    ? "http://192.168.1.4:3000/"
+    : "http://192.168.1.4:3000/";
 
     interface CustomAxiosInstance extends AxiosInstance {
       saveItem: (key: string, value: string) => Promise<void>;
